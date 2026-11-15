@@ -1,0 +1,19 @@
+# Floodgate Configuration
+# Manages Bedrock player authentication without requiring a Java edition account
+key-file-name: key.pem
+
+# Prefix added to Bedrock usernames to prevent collisions with Java accounts
+# E.g. Bedrock player 'Alex' becomes '.Alex'
+username-prefix: "."
+replace-spaces: true
+
+player-link:
+  enabled: true
+  allow-linking: true
+  type: local
+  enable-own-linking: true
+
+send-floodgate-data: true
+disconnect:
+  invalid-key: "Encryption key invalid. Please contact server administration."
+  invalid-arguments: "Invalid Bedrock credentials. Please reconnect."

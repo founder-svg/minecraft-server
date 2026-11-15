@@ -1,0 +1,40 @@
+name: Build Custom Plugins
+
+on:
+  push:
+    branches: [main, develop]
+    paths:
+      - 'plugins/**'
+      - '.github/workflows/plugin-build.yml'
+  pull_request:
+    branches: [main, develop]
+    paths:
+      - 'plugins/**'
+
+jobs:
+  build:
+    name: Build & Package Java Plugins
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Java 21 (Temurin)
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+          cache: 'maven'
+
+      - name: Compile and Test Plugins
+        run: |
+          cd plugins
+          mvn clean package -B
+
+      - name: Archive Built JAR Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: wixfox-plugin-jars
+          path: plugins/*/target/*.jar
+          retention-days: 14

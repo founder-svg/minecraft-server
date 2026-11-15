@@ -1,0 +1,114 @@
+version: '3.8'
+
+services:
+  # ----------------------------------------------------
+  # 1. PostgreSQL 16 Persistent Database
+  # ----------------------------------------------------
+  postgres:
+    image: postgres:16-alpine
+    container_name: wixfox-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-wixfox_network}
+      POSTGRES_USER: ${POSTGRES_USER:-wixfox_admin}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-replace_with_a_secure_postgres_password_min_32_chars}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./database/schema/schema.sql:/docker-entrypoint-initdb.d/01_schema.sql:ro
+      - ./database/seeds/01_initial_data.sql:/docker-entrypoint-initdb.d/02_seeds.sql:ro
+    networks:
+      - wixfox-internal
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-wixfox_admin} -d ${POSTGRES_DB:-wixfox_network}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # ----------------------------------------------------
+  # 2. Minecraft Paper Server (Java + Bedrock Crossplay)
+  # ----------------------------------------------------
+  minecraft:
+    build:
+      context: .
+      dockerfile: infrastructure/docker/Dockerfile.paper
+    container_name: wixfox-minecraft
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "${JAVA_PORT:-25565}:25565/tcp"        # Minecraft Java Edition
+      - "${BEDROCK_PORT:-19132}:19132/udp"      # Minecraft Bedrock Edition (Geyser)
+    environment:
+      MINECRAFT_RAM_MIN: ${MINECRAFT_RAM_MIN:-4G}
+      MINECRAFT_RAM_MAX: ${MINECRAFT_RAM_MAX:-5G}
+      POSTGRES_HOST: postgres
+      POSTGRES_DB: ${POSTGRES_DB:-wixfox_network}
+      POSTGRES_USER: ${POSTGRES_USER:-wixfox_admin}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-replace_with_a_secure_postgres_password_min_32_chars}
+      RCON_PASSWORD: ${RCON_PASSWORD:-replace_with_a_very_secure_rcon_password}
+    volumes:
+      - minecraft-data:/data
+      - ./minecraft/paper/server.properties:/data/server.properties
+      - ./minecraft/paper/paper-global.yml:/data/config/paper-global.yml
+      - ./minecraft/paper/paper-world-defaults.yml:/data/config/paper-world-defaults.yml
+      - ./minecraft/paper/spigot.yml:/data/spigot.yml
+      - ./minecraft/paper/bukkit.yml:/data/bukkit.yml
+      - ./minecraft/geyser/config.yml:/data/plugins/Geyser-Spigot/config.yml
+      - ./minecraft/floodgate/config.yml:/data/plugins/floodgate/config.yml
+      - ./minecraft/configs/eula.txt:/data/eula.txt
+    networks:
+      - wixfox-internal
+
+  # ----------------------------------------------------
+  # 3. NestJS Backend Administration API
+  # ----------------------------------------------------
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: wixfox-backend
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5432
+      POSTGRES_DB: ${POSTGRES_DB:-wixfox_network}
+      POSTGRES_USER: ${POSTGRES_USER:-wixfox_admin}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-replace_with_a_secure_postgres_password_min_32_chars}
+      MINECRAFT_HOST: minecraft
+      RCON_PORT: 25575
+      RCON_PASSWORD: ${RCON_PASSWORD:-replace_with_a_very_secure_rcon_password}
+      JWT_SECRET: ${JWT_SECRET:-replace_with_a_secure_jwt_secret_key_minimum_64_characters}
+      CORS_ORIGIN: "http://localhost:8080,http://localhost:3000"
+    networks:
+      - wixfox-internal
+
+  # ----------------------------------------------------
+  # 4. React Administration Dashboard (Nginx)
+  # ----------------------------------------------------
+  admin-panel:
+    build:
+      context: ./admin-panel
+      dockerfile: Dockerfile
+    container_name: wixfox-admin-panel
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - "${ADMIN_PORT:-8080}:80"
+    networks:
+      - wixfox-internal
+
+networks:
+  wixfox-internal:
+    driver: bridge
+
+volumes:
+  postgres-data:
+  minecraft-data:
+  backup-data:

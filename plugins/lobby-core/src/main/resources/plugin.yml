@@ -1,0 +1,20 @@
+name: LobbyCore
+version: 1.0.0
+main: net.wixfox.lobby.LobbyCore
+api-version: '1.20'
+depend: [NetworkCore]
+author: Wixfox Technologies
+description: Spawn management, player navigation GUI, void protection, and welcome titles.
+commands:
+  spawn:
+    description: Teleport to server spawn
+    permission: wixfox.spawn
+  setspawn:
+    description: Set the global spawn location
+    permission: wixfox.admin
+  navigator:
+    description: Open the network game mode navigator
+    aliases: [menu, servermenu]
+  rules:
+    description: View the server rules
+    permission: wixfox.rules

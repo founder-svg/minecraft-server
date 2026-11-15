@@ -1,0 +1,22 @@
+name: EconomyCore
+version: 1.0.0
+main: net.wixfox.economy.EconomyCore
+api-version: '1.20'
+depend: [NetworkCore, PlayerManager]
+softdepend: [Vault]
+author: Wixfox Technologies
+description: ACID-compliant economy with Vault integration, player transfers, and transaction ledger.
+commands:
+  balance:
+    description: View your or another player's balance
+    aliases: [bal, money]
+    permission: wixfox.eco.balance
+  pay:
+    description: Transfer currency to another player
+    permission: wixfox.eco.pay
+  eco:
+    description: Manage player balances
+    permission: wixfox.eco.admin
+  daily:
+    description: Claim your daily coin reward
+    permission: wixfox.eco.daily

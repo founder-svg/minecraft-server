@@ -1,0 +1,13 @@
+name: NetworkCore
+version: 1.0.0
+main: net.wixfox.network.NetworkCore
+api-version: '1.20'
+author: Wixfox Technologies
+description: Core infrastructure, HikariCP database pooling, and shared utilities for Wixfox Network.
+commands:
+  wixfox:
+    description: Core network status and system info
+    permission: wixfox.admin
+  netreload:
+    description: Reload network configuration
+    permission: wixfox.admin

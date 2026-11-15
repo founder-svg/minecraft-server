@@ -1,0 +1,22 @@
+name: LandProtection
+version: 1.0.0
+main: net.wixfox.land.LandProtection
+api-version: '1.20'
+depend: [NetworkCore, PlayerManager]
+author: Wixfox Technologies
+description: Chunk-based land claims, permissions, trust management, and PvP flags.
+commands:
+  claim:
+    description: Claim the chunk you are currently standing on
+    permission: wixfox.claim.basic
+  unclaim:
+    description: Unclaim the current chunk
+    permission: wixfox.claim.basic
+  trust:
+    description: Trust a player in your current claim
+    permission: wixfox.claim.basic
+  untrust:
+    description: Remove trust from a player
+    permission: wixfox.claim.basic
+  claiminfo:
+    description: View ownership details of current land

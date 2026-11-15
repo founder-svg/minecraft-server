@@ -1,0 +1,18 @@
+# Wixfox NetworkCore Configuration
+database:
+  host: ${POSTGRES_HOST:-postgres}
+  port: 5432
+  database: ${POSTGRES_DB:-wixfox_network}
+  username: ${POSTGRES_USER:-wixfox_admin}
+  password: ${POSTGRES_PASSWORD:-replace_with_a_secure_postgres_password_min_32_chars}
+  pool:
+    maximum-pool-size: 10
+    minimum-idle: 3
+    connection-timeout-ms: 10000
+    idle-timeout-ms: 30000
+    max-lifetime-ms: 1800000
+
+network:
+  server-name: "wixfox-smp"
+  server-type: "PAPER"
+  broadcast-prefix: "<gradient:#00C9FF:#92FE9D>[Wixfox]</gradient> "

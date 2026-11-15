@@ -1,0 +1,32 @@
+# Production Dockerfile for Paper Minecraft Server + Geyser + Floodgate
+FROM eclipse-temurin:21-jre-alpine
+
+LABEL maintainer="Wixfox Technologies <support@wixfox.net>"
+
+# Install curl, jq, bash, and tzdata
+RUN apk add --no-cache curl jq bash tzdata
+
+WORKDIR /data
+
+# Download latest stable Paper 1.20.4 build
+RUN curl -o /data/paper.jar https://api.papermc.io/v2/projects/paper/versions/1.20.4/builds/499/downloads/paper-1.20.4-499.jar
+
+# Setup plugin directory
+RUN mkdir -p /data/plugins /data/plugins/Geyser-Spigot /data/plugins/floodgate
+
+# Download GeyserMC and Floodgate Spigot plugins
+RUN curl -o /data/plugins/Geyser-Spigot.jar https://download.geysermc.org/v2/projects/geyser/versions/latest/builds/latest/downloads/spigot && \
+    curl -o /data/plugins/floodgate-spigot.jar https://download.geysermc.org/v2/projects/floodgate/versions/latest/builds/latest/downloads/spigot
+
+# Pre-accept EULA
+RUN echo "eula=true" > /data/eula.txt
+
+# Copy entrypoint startup script
+COPY infrastructure/scripts/start-paper.sh /usr/local/bin/start-paper.sh
+RUN chmod +x /usr/local/bin/start-paper.sh
+
+EXPOSE 25565/tcp
+EXPOSE 19132/udp
+EXPOSE 25575/tcp
+
+ENTRYPOINT ["/usr/local/bin/start-paper.sh"]

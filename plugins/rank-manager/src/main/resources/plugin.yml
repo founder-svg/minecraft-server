@@ -1,0 +1,11 @@
+name: RankManager
+version: 1.0.0
+main: net.wixfox.ranks.RankManager
+api-version: '1.20'
+depend: [NetworkCore, PlayerManager]
+author: Wixfox Technologies
+description: Role-based ranks, permissions, and Adventure chat formatting.
+commands:
+  rank:
+    description: Manage player ranks and permissions
+    permission: wixfox.ranks.assign

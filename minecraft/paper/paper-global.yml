@@ -1,0 +1,68 @@
+# Paper Global Configuration
+# Optimized for Wixfox Minecraft Network (20 Players, 20 TPS Target)
+_version: 29
+block-updates:
+  disable-chorus-plant-updates: false
+  disable-mushroom-block-updates: false
+  disable-noteblock-updates: false
+  disable-tripwire-updates: false
+chunk-loading-advanced:
+  auto-config-send-distance: true
+  player-max-concurrent-chunk-generates: 4
+  player-max-concurrent-chunk-loads: 8
+chunk-loading-basic:
+  player-max-chunk-generate-rate: -1.0
+  player-max-chunk-load-rate: 100.0
+chunk-system:
+  gen-parallelism: 'default'
+  io-threads: 4
+  worker-threads: 4
+collisions:
+  enable-player-collisions: true
+  send-full-pos-for-hard-colliding-entities: true
+commands:
+  fix-target-selector-tag-completion: true
+  suggest-player-names-when-null-tab-completions: true
+item-validation:
+  display-name: 8192
+  loc-name: 8192
+  lore-line: 8192
+  resolve-selectors-in-books: false
+messages:
+  kick:
+    connection-throttle: Connection throttled! Please wait before reconnecting.
+    flying-player: Flying is not enabled on this server
+    flying-vehicle: Flying is not enabled on this server
+misc:
+  chat-threads:
+    chat-executor-core-size: -1
+    chat-executor-max-size: -1
+  compression-level: default
+  strict-advancement-dimension-check: false
+packet-limiter:
+  all-packets:
+    action: KICK
+    interval: 7.0
+    max-packet-rate: 500.0
+proxies:
+  bungee-cord:
+    online-mode: true
+  proxy-protocol: false
+  velocity:
+    enabled: false
+    online-mode: true
+    secret: ''
+timings:
+  enabled: true
+  verbose: true
+  server-name: "Wixfox Network"
+  server-name-privacy: false
+  hidden-config-entries:
+  - database
+  - settings.bungeecord-addresses
+  - settings.velocity-support.secret
+  history-interval: 300
+  history-length: 3600
+watchdog:
+  early-warning-delay: 10000
+  early-warning-every: 5000

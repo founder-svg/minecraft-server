@@ -1,0 +1,32 @@
+name: ModerationCore
+version: 1.0.0
+main: net.wixfox.moderation.ModerationCore
+api-version: '1.20'
+depend: [NetworkCore, PlayerManager]
+author: Wixfox Technologies
+description: Ban, kick, mute, warn, and punishment history management.
+commands:
+  ban:
+    description: Permanently ban a player
+    permission: wixfox.mod.ban
+  tempban:
+    description: Temporarily ban a player
+    permission: wixfox.mod.tempban
+  unban:
+    description: Unban a player
+    permission: wixfox.mod.unban
+  kick:
+    description: Kick an online player
+    permission: wixfox.mod.kick
+  mute:
+    description: Mute a player from chat
+    permission: wixfox.mod.mute
+  tempmute:
+    description: Temporarily mute a player from chat
+    permission: wixfox.mod.tempmute
+  warn:
+    description: Issue an official warning to a player
+    permission: wixfox.mod.warn
+  history:
+    description: Check punishment history for a player
+    permission: wixfox.mod.history

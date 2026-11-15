@@ -1,0 +1,126 @@
+# Paper World Defaults Configuration
+# Optimized for performance, anti-lag, and low MSPT
+_version: 30
+anticheat:
+  obfuscation:
+    items:
+      hide-itemmeta: false
+      hide-durability: false
+chunks:
+  auto-save-interval: 6000
+  delay-chunk-unloads-by: 10s
+  entity-per-chunk-save-limit:
+    arrow: 16
+    ender_pearl: 8
+    experience_orb: 16
+    snowball: 8
+  fixed-chunk-inhabited-time: -1
+  flush-regions-on-save: false
+  max-auto-save-chunks-per-tick: 24
+  prevent-moving-into-unloaded-chunks: true
+entities:
+  armor-stands:
+    do-collision-entity-lookups: false
+    tick: false
+  behavior:
+    disable-chest-cat-detection: true
+    spiteful-mobs-tick: false
+  mob-spawning:
+    despawn-ranges:
+      ambient:
+        hard: 72
+        soft: 32
+      axolotls:
+        hard: 72
+        soft: 32
+      creature:
+        hard: 72
+        soft: 32
+      misc:
+        hard: 72
+        soft: 32
+      monster:
+        hard: 72
+        soft: 32
+      underground_water_creature:
+        hard: 72
+        soft: 32
+      water_ambient:
+        hard: 72
+        soft: 32
+      water_creature:
+        hard: 72
+        soft: 32
+  spawning:
+    all-chunks-are-slime-chunks: false
+    alt-item-despawn-rate:
+      enabled: true
+      items:
+        cobblestone: 300
+        dirt: 300
+        sand: 300
+    count-all-mobs-for-spawning: false
+    creative-arrow-despawn-rate: 20
+    despawn-ranges:
+      monster:
+        hard: 96
+        soft: 32
+    disable-mob-spawner-spawn-egg-transformation: false
+    non-player-arrow-despawn-rate: 20
+    skeleton-horse-thunder-spawn-chance: 0.01
+environment:
+  disable-thunder: false
+  fire-tick-delay: 30
+  frosted-ice:
+    delay:
+      max: 40
+      min: 20
+    enabled: true
+  nether-ceiling-void-damage-height: 0
+  optimize-explosions: true
+  treasure-maps:
+    enabled: true
+    find-already-discovered:
+      loot-tables: default
+      villager-trade: false
+fishing-time-range:
+  maximum: 600
+  minimum: 100
+hopper:
+  cooldown-when-full: true
+  disable-move-event: false
+  ignore-occluding-blocks: false
+lootables:
+  auto-replenish: false
+  max-refills: -1
+  refresh-min: 12h
+  refresh-max: 2d
+  reset-seed-on-fill: true
+max-growth-height:
+  bamboo:
+    max: 16
+    min: 11
+  cactus: 3
+  reeds: 3
+misc:
+  disable-end-credits: false
+  redstone-implementation: ALTERNATE_CURRENT
+  shield-blocking-delay: 5
+redstone-implementation: ALTERNATE_CURRENT
+scoreboards:
+  use-vanilla-world-scoreboard-name-tag-visibility: false
+spawn:
+  allow-using-signs-inside-spawn-protection: true
+  keep-spawn-loaded: true
+  keep-spawn-loaded-range: 3
+tick-rates:
+  behavior:
+    villager:
+      validatenearbypoi: 60
+  container-update: 1
+  grass-spread: 1
+  mob-spawner: 1
+  sensor:
+    villager:
+      secondarypoisensor: 40
+  surrounding-entity-look: 2

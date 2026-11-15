@@ -1,0 +1,14 @@
+name: PlayerManager
+version: 1.0.0
+main: net.wixfox.players.PlayerManager
+api-version: '1.20'
+depend: [NetworkCore]
+softdepend: [floodgate]
+author: Wixfox Technologies
+description: Unified Java and Bedrock player profiles, statistics, and session management.
+commands:
+  profile:
+    description: View your or another player's network profile
+    aliases: [whois, pinfo]
+  stats:
+    description: View your or another player's game statistics

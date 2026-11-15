@@ -1,0 +1,83 @@
+# General
+.DS_Store
+Thumbs.db
+*.log
+tmp/
+temp/
+
+# Environment variables & secrets
+.env
+.env.local
+.env.*.local
+*.pem
+*.key
+*.crt
+id_rsa
+id_rsa.pub
+
+# Java & Kotlin & Gradle & Maven
+*.class
+target/
+build/
+.gradle/
+gradle-app.setting
+!gradle-wrapper.jar
+.gradletasknamecache
+bin/
+out/
+*.war
+*.nar
+*.ear
+*.zip
+*.tar.gz
+*.rar
+hs_err_pid*
+replay_pid*
+
+# Minecraft Runtime & World Files (stored in persistent docker volumes)
+minecraft/run/
+minecraft/data/
+minecraft/paper/world/
+minecraft/paper/world_nether/
+minecraft/paper/world_the_end/
+minecraft/paper/logs/
+minecraft/paper/plugins/*.jar
+!minecraft/paper/plugins/.gitkeep
+minecraft/paper/cache/
+minecraft/paper/libraries/
+*.lck
+
+# Node.js / NPM / NestJS / React
+node_modules/
+dist/
+.next/
+.turbo/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+.pnpm-debug.log*
+coverage/
+.nyc_output/
+
+# IDE & Editors
+.idea/
+*.iml
+*.iws
+*.ipr
+.vscode/
+!.vscode/extensions.json
+!.vscode/settings.json
+*.swp
+*.swo
+*~
+
+# Database runtime files
+database/data/
+postgres-data/
+
+# Docker volumes
+docker-volumes/
+backups/*.sql
+backups/*.tar.gz

@@ -87,6 +87,13 @@
         <span>Moderation</span>
       </a>
 
+      <a class="nav-item" data-tab="security">
+        <span class="nav-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </span>
+        <span>Security Center</span>
+      </a>
+
       <a class="nav-item" data-tab="backups">
         <span class="nav-icon">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5V19A9 3 0 0 0 21 19V5"/><path d="M3 12A9 3 0 0 0 21 12"/></svg>
@@ -779,6 +786,201 @@
                 <!-- Rendered by js/app.js -->
               </tbody>
             </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- =============================================================
+           VIEW: SECURITY & CYBERATTACK PREVENTION CENTER (PRD v1.0)
+           ============================================================= -->
+      <section id="view-security" class="view-pane" style="display: none; flex-direction: column; gap: 16px;">
+        <!-- Security Overview Ribbon -->
+        <div class="card-panel" style="padding: 16px 20px; border-left: 4px solid var(--wix-orange);">
+          <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;">
+            <div>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span class="status-dot"></span>
+                <h3 class="card-panel-title" style="margin: 0; font-size: 16px;">Cybersecurity & Threat Defense Center</h3>
+                <span class="badge badge-online">Layer 1-7 Active</span>
+              </div>
+              <p style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">Zero-Trust Defense-in-Depth architecture protecting Host VPS, Game Traffic, Private APIs, and Database.</p>
+            </div>
+
+            <div style="display: flex; gap: 8px;">
+              <button class="btn-primary" onclick="runAutomatedSecurityAudit()">🛡️ Run Security Audit</button>
+              <button class="btn-action-sm danger" onclick="triggerEmergencyLockdown()">🚨 Emergency Lockdown</button>
+              <button class="btn-secondary" onclick="exportSecurityReport()">📄 Export Report</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4 Security KPI Cards -->
+        <div class="stats-row">
+          <div class="stat-card">
+            <div class="stat-icon-box green">🛡️</div>
+            <div class="stat-content">
+              <div class="stat-value">7 / 7</div>
+              <div class="stat-label">Defense Layers Active</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon-box orange">🧱</div>
+            <div class="stat-content">
+              <div class="stat-value" style="font-size: 18px;">UFW Strict</div>
+              <div class="stat-label">Default-Deny Incoming Policy</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon-box purple">👁️</div>
+            <div class="stat-content">
+              <div class="stat-value" id="secBlockedThreatsVal">14 Blocked</div>
+              <div class="stat-label">CrowdSec / Fail2ban Telemetry</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon-box blue">🔒</div>
+            <div class="stat-content">
+              <div class="stat-value" style="font-size: 18px;">Tailscale VPN</div>
+              <div class="stat-label">SSH & Admin Panel Isolated</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Port Exposure & Boundary Matrix Table -->
+        <div class="card-panel">
+          <div class="card-panel-header">
+            <h3 class="card-panel-title">Port Access Control & Vulnerability Isolation Matrix</h3>
+            <span class="badge badge-java">0 Unauthorized Ports Exposed</span>
+          </div>
+
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Port</th>
+                  <th>Protocol</th>
+                  <th>Target Service</th>
+                  <th>Exposure Boundary</th>
+                  <th>Protection Mechanism</th>
+                  <th>Live Audit Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><code style="color: var(--accent-green); font-weight: bold;">25565</code></td>
+                  <td>TCP</td>
+                  <td>Minecraft Java Edition</td>
+                  <td><span class="badge badge-online">Public Players</span></td>
+                  <td>TCPShield / Anti-DDoS Edge + Connection Throttle</td>
+                  <td><span class="badge badge-online">SECURED</span></td>
+                </tr>
+                <tr>
+                  <td><code style="color: var(--accent-green); font-weight: bold;">19132</code></td>
+                  <td>UDP</td>
+                  <td>Minecraft Bedrock (Geyser)</td>
+                  <td><span class="badge badge-online">Public Players</span></td>
+                  <td>GeyserMC + Floodgate Key Exchange Authentication</td>
+                  <td><span class="badge badge-online">SECURED</span></td>
+                </tr>
+                <tr>
+                  <td><code style="color: var(--wix-orange); font-weight: bold;">22</code></td>
+                  <td>TCP</td>
+                  <td>SSH Host Administration</td>
+                  <td><span class="badge" style="background: rgba(245, 158, 11, 0.15); color: #f59e0b;">Tailscale VPN Only</span></td>
+                  <td>Ed25519 Keys Only (Passwords & Root Disabled)</td>
+                  <td><span class="badge badge-online">RESTRICTED</span></td>
+                </tr>
+                <tr>
+                  <td><code style="color: var(--wix-orange); font-weight: bold;">8080</code></td>
+                  <td>TCP</td>
+                  <td>Wixfox Admin Console</td>
+                  <td><span class="badge" style="background: rgba(245, 158, 11, 0.15); color: #f59e0b;">Tailscale VPN Only</span></td>
+                  <td>Bound to 127.0.0.1 (Never 0.0.0.0)</td>
+                  <td><span class="badge badge-online">RESTRICTED</span></td>
+                </tr>
+                <tr>
+                  <td><code style="color: var(--accent-red); font-weight: bold;">5432</code></td>
+                  <td>TCP</td>
+                  <td>PostgreSQL 16 Database</td>
+                  <td><span class="badge badge-banned">Internal Docker Only</span></td>
+                  <td>Isolated Bridge Network (Public Ingress Blocked)</td>
+                  <td><span class="badge badge-online">AIR-GAPPED</span></td>
+                </tr>
+                <tr>
+                  <td><code style="color: var(--accent-red); font-weight: bold;">25575</code></td>
+                  <td>TCP</td>
+                  <td>Minecraft RCON Terminal</td>
+                  <td><span class="badge badge-banned">Internal Docker Only</span></td>
+                  <td>High-entropy password (No public listener)</td>
+                  <td><span class="badge badge-online">AIR-GAPPED</span></td>
+                </tr>
+                <tr>
+                  <td><code style="color: var(--accent-red); font-weight: bold;">3000</code></td>
+                  <td>TCP</td>
+                  <td>NestJS Backend API</td>
+                  <td><span class="badge badge-banned">Internal Docker Only</span></td>
+                  <td>JWT Authentication & Rate Limiting</td>
+                  <td><span class="badge badge-online">AIR-GAPPED</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- 22-Point Production Acceptance Checklist (PRD Section 22) -->
+        <div class="card-panel">
+          <div class="card-panel-header">
+            <div>
+              <h3 class="card-panel-title">Production Acceptance Checklist (PRD Section 22)</h3>
+              <p style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">Mandatory security gates required before opening server to the public.</p>
+            </div>
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <span id="secChecklistProgress" class="badge badge-java" style="font-size: 13px;">0 / 22 Verified</span>
+              <button class="btn-action-sm" onclick="resetSecurityChecklist()">Reset</button>
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 10px; margin-top: 6px;" id="secChecklistGrid">
+            <!-- Rendered by js/app.js -->
+          </div>
+        </div>
+
+        <!-- The 10 Non-Negotiable Policies -->
+        <div class="card-panel">
+          <div class="card-panel-header">
+            <h3 class="card-panel-title">The 10 Non-Negotiable Security Policies (PRD Section 23)</h3>
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 12.5px;">
+            <div style="padding: 10px; background: rgba(255,255,255,0.02); border-radius: 6px; border-left: 3px solid var(--accent-green);">
+              <strong>1. No Public Database or RCON:</strong> Port 5432 and 25575 must never bind to 0.0.0.0.
+            </div>
+            <div style="padding: 10px; background: rgba(255,255,255,0.02); border-radius: 6px; border-left: 3px solid var(--accent-green);">
+              <strong>2. No Public Admin Interface:</strong> Console strictly behind Tailscale private VPN.
+            </div>
+            <div style="padding: 10px; background: rgba(255,255,255,0.02); border-radius: 6px; border-left: 3px solid var(--accent-green);">
+              <strong>3. No Default Credentials:</strong> High-entropy cryptographic secrets only.
+            </div>
+            <div style="padding: 10px; background: rgba(255,255,255,0.02); border-radius: 6px; border-left: 3px solid var(--accent-green);">
+              <strong>4. No Secrets in GitHub:</strong> Passwords, JWT keys & Floodgate keys excluded via .gitignore.
+            </div>
+            <div style="padding: 10px; background: rgba(255,255,255,0.02); border-radius: 6px; border-left: 3px solid var(--accent-green);">
+              <strong>5. No Unreviewed Plugins:</strong> Staging sandbox verification & SHA-256 checks required.
+            </div>
+            <div style="padding: 10px; background: rgba(255,255,255,0.02); border-radius: 6px; border-left: 3px solid var(--accent-green);">
+              <strong>6. No Shared Staff Accounts:</strong> Individual staff identities with MFA enforcement.
+            </div>
+            <div style="padding: 10px; background: rgba(255,255,255,0.02); border-radius: 6px; border-left: 3px solid var(--accent-green);">
+              <strong>7. No Unaudited Actions:</strong> Every moderation, economy and file command permanently logged.
+            </div>
+            <div style="padding: 10px; background: rgba(255,255,255,0.02); border-radius: 6px; border-left: 3px solid var(--accent-green);">
+              <strong>8. No Cloudflare Game Proxy Assumption:</strong> Standard web proxy does not protect 25565/19132.
+            </div>
+            <div style="padding: 10px; background: rgba(255,255,255,0.02); border-radius: 6px; border-left: 3px solid var(--accent-green);">
+              <strong>9. No Untested Backups:</strong> AES-256 GPG backups must be verified via restoration tests.
+            </div>
+            <div style="padding: 10px; background: rgba(255,255,255,0.02); border-radius: 6px; border-left: 3px solid var(--accent-green);">
+              <strong>10. Defense-in-Depth Principle:</strong> Multi-layered resilience so no single breach is fatal.
+            </div>
           </div>
         </div>
       </section>

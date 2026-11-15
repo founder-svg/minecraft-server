@@ -1,0 +1,94 @@
+# ===================================================================
+# Wixfox Minecraft Network — Production Hardened Compose Override
+# Enforces Container Least-Privilege, Resource Limits, and Network Isolation
+# Usage: docker compose -f docker-compose.yml -f docker-compose.hardened.yml up -d
+# ===================================================================
+
+version: '3.8'
+
+services:
+  # ----------------------------------------------------
+  # 1. PostgreSQL 16 (Isolated Backend Database)
+  # ----------------------------------------------------
+  postgres:
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    cap_add:
+      - CHOWN
+      - SETUID
+      - SETGID
+      - DAC_OVERRIDE
+    deploy:
+      resources:
+        limits:
+          cpus: '1.5'
+          memory: 1536M
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+    # Explicitly ensure no port is published externally
+    ports: []
+
+  # ----------------------------------------------------
+  # 2. Minecraft Paper Server (Game Node)
+  # ----------------------------------------------------
+  minecraft:
+    security_opt:
+      - no-new-privileges:true
+    deploy:
+      resources:
+        limits:
+          cpus: '3.0'
+          memory: 6144M
+        reservations:
+          cpus: '1.0'
+          memory: 4096M
+    # Only game ports exposed
+    ports:
+      - "${JAVA_PORT:-25565}:25565/tcp"
+      - "${BEDROCK_PORT:-19132}:19132/udp"
+
+  # ----------------------------------------------------
+  # 3. NestJS Backend Administration API (Internal)
+  # ----------------------------------------------------
+  backend:
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    cap_add:
+      - NET_BIND_SERVICE
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1024M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+    # Never exposed publicly
+    ports: []
+
+  # ----------------------------------------------------
+  # 4. React Admin Console (Local/Tailscale Access Only)
+  # ----------------------------------------------------
+  admin-panel:
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    cap_add:
+      - NET_BIND_SERVICE
+      - CHOWN
+      - SETUID
+      - SETGID
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+    # Bind exclusively to localhost / private loopback
+    ports:
+      - "127.0.0.1:${ADMIN_PORT:-8080}:80"

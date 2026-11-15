@@ -3,14 +3,35 @@ name: Security & Vulnerability Scan
 on:
   push:
     branches: [main, develop]
+  pull_request:
+    branches: [main]
   schedule:
     - cron: '0 0 * * 1' # Run weekly on Mondays
 
-jobs:
-  scan:
-    name: Trivy Security Scan
-    runs-on: ubuntu-latest
+permissions:
+  contents: read
 
+jobs:
+  audit:
+    name: Security Compliance & Audit Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Run Wixfox Security Compliance Audit
+        run: |
+          chmod +x infrastructure/security/security-audit.sh
+          ./infrastructure/security/security-audit.sh
+
+      - name: Verify Gitignore & Secrets
+        run: |
+          chmod +x infrastructure/security/verify-secrets.sh
+          ./infrastructure/security/verify-secrets.sh .env.example
+
+  trivy:
+    name: Trivy Container & Filesystem Vulnerability Scan
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4

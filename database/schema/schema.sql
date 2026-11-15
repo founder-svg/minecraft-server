@@ -259,3 +259,20 @@ CREATE TABLE IF NOT EXISTS backup_records (
 );
 
 CREATE INDEX IF NOT EXISTS idx_backup_records_created_at ON backup_records(created_at DESC);
+
+
+-- -------------------------------------------------------------------
+-- 18. ROLE GRANTS (Least-Privilege Enforcement)
+-- -------------------------------------------------------------------
+DO $$
+BEGIN
+    IF EXISTS (SELECT FROM pg_catalog.pg_roles WHERE rolname = 'wixfox_app') THEN
+        GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO wixfox_app;
+        GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA public TO wixfox_app;
+    END IF;
+    IF EXISTS (SELECT FROM pg_catalog.pg_roles WHERE rolname = 'wixfox_backup') THEN
+        GRANT SELECT ON ALL TABLES IN SCHEMA public TO wixfox_backup;
+        GRANT SELECT ON ALL SEQUENCES IN SCHEMA public TO wixfox_backup;
+    END IF;
+END
+$$;

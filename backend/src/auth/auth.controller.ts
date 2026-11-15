@@ -15,6 +15,14 @@ export class AuthController {
     return this.authService.login(user);
   }
 
+  @Post('refresh')
+  async refresh(@Body('refresh_token') refreshToken: string) {
+    if (!refreshToken) {
+      throw new UnauthorizedException('Refresh token is required');
+    }
+    return this.authService.refresh(refreshToken);
+  }
+
   @UseGuards(AuthGuard('jwt'))
   @Get('profile')
   getProfile(@Request() req: any) {

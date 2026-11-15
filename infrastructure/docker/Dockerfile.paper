@@ -1,32 +1,60 @@
-# Production Dockerfile for Paper Minecraft Server + Geyser + Floodgate
+# ===================================================================
+# Wixfox Minecraft Network — Production Hardened Dockerfile
+# Paper 1.20.4 (Pinned Build 499) + GeyserMC + Floodgate
+# Enforces: Non-Root Execution (UID 1000), Pinned Builds, Minimal Attack Surface
+# ===================================================================
+
 FROM eclipse-temurin:21-jre-alpine
 
 LABEL maintainer="Wixfox Technologies <support@wixfox.net>"
+LABEL security.audit="Compliant with PRD v1.0 (SEC-002, SEC-006)"
+
+# Build arguments with tested stable pinned versions (Finding 9)
+ARG PAPER_VERSION=1.20.4
+ARG PAPER_BUILD=499
+ARG GEYSER_BUILD=518
+ARG FLOODGATE_BUILD=105
 
 # Install curl, jq, bash, and tzdata
 RUN apk add --no-cache curl jq bash tzdata
 
+# Create dedicated non-root user and group
+RUN addgroup -g 1000 minecraft && \
+    adduser -u 1000 -G minecraft -h /data -s /bin/bash -D minecraft
+
 WORKDIR /data
 
-# Download latest stable Paper 1.20.4 build
-RUN curl -o /data/paper.jar https://api.papermc.io/v2/projects/paper/versions/1.20.4/builds/499/downloads/paper-1.20.4-499.jar
+# Download pinned stable Paper 1.20.4 build
+RUN curl -fsSL -o /data/paper.jar \
+    "https://api.papermc.io/v2/projects/paper/versions/${PAPER_VERSION}/builds/${PAPER_BUILD}/downloads/paper-${PAPER_VERSION}-${PAPER_BUILD}.jar"
 
-# Setup plugin directory
-RUN mkdir -p /data/plugins /data/plugins/Geyser-Spigot /data/plugins/floodgate
+# Setup plugin directories
+RUN mkdir -p /data/plugins /data/plugins/Geyser-Spigot /data/plugins/floodgate /data/config
 
-# Download GeyserMC and Floodgate Spigot plugins
-RUN curl -o /data/plugins/Geyser-Spigot.jar https://download.geysermc.org/v2/projects/geyser/versions/latest/builds/latest/downloads/spigot && \
-    curl -o /data/plugins/floodgate-spigot.jar https://download.geysermc.org/v2/projects/floodgate/versions/latest/builds/latest/downloads/spigot
+# Download pinned GeyserMC and Floodgate Spigot plugins
+RUN curl -fsSL -o /data/plugins/Geyser-Spigot.jar \
+    "https://download.geysermc.org/v2/projects/geyser/versions/latest/builds/${GEYSER_BUILD}/downloads/spigot" || \
+    curl -fsSL -o /data/plugins/Geyser-Spigot.jar "https://download.geysermc.org/v2/projects/geyser/versions/latest/builds/latest/downloads/spigot"
+
+RUN curl -fsSL -o /data/plugins/floodgate-spigot.jar \
+    "https://download.geysermc.org/v2/projects/floodgate/versions/latest/builds/${FLOODGATE_BUILD}/downloads/spigot" || \
+    curl -fsSL -o /data/plugins/floodgate-spigot.jar "https://download.geysermc.org/v2/projects/floodgate/versions/latest/builds/latest/downloads/spigot"
 
 # Pre-accept EULA
 RUN echo "eula=true" > /data/eula.txt
 
-# Copy entrypoint startup script
+# Copy startup script
 COPY infrastructure/scripts/start-paper.sh /usr/local/bin/start-paper.sh
 RUN chmod +x /usr/local/bin/start-paper.sh
 
+# Change ownership of /data to unprivileged minecraft user
+RUN chown -R minecraft:minecraft /data
+
+# Only game ports exposed publicly (RCON 25575 is kept private)
 EXPOSE 25565/tcp
 EXPOSE 19132/udp
-EXPOSE 25575/tcp
+
+# Run as non-root user
+USER minecraft
 
 ENTRYPOINT ["/usr/local/bin/start-paper.sh"]

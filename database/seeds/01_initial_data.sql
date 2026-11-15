@@ -58,10 +58,18 @@ INSERT INTO permissions (rank_id, permission_node, value) VALUES
 (6, '*', TRUE)
 ON CONFLICT (rank_id, permission_node) DO NOTHING;
 
--- 3. SEED INITIAL ADMIN USER
--- Default login: admin / admin123 (Password bcrypt hash)
-INSERT INTO admin_users (username, email, password_hash, role, is_active) VALUES
-('admin', 'admin@wixfox.net', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 'SUPERADMIN', TRUE)
+-- 3. INITIAL ADMIN USER (SEC-001 & SEC-005: Zero Default Credentials)
+-- Default/predictable administrator credentials ('admin' / 'admin123') are strictly forbidden.
+-- Initial superadmin account is provisioned via ./infrastructure/security/setup-admin.sh
+-- or via environment-injected password hash during first-run deployment.
+INSERT INTO admin_users (username, email, password_hash, role, is_active)
+SELECT 
+    COALESCE(NULLIF(current_setting('wixfox.initial_admin_user', true), ''), 'wixfox_owner'),
+    COALESCE(NULLIF(current_setting('wixfox.initial_admin_email', true), ''), 'owner@wixfox.net'),
+    current_setting('wixfox.initial_admin_hash', true),
+    'SUPERADMIN',
+    TRUE
+WHERE NULLIF(current_setting('wixfox.initial_admin_hash', true), '') IS NOT NULL
 ON CONFLICT (username) DO NOTHING;
 
 -- 4. SEED DEFAULT MINECRAFT SERVER

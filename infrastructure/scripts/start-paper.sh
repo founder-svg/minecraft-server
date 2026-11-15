@@ -1,9 +1,14 @@
 #!/bin/bash
 set -e
 
-# Replace environment variables in configuration files if needed
+# Validate that RCON_PASSWORD is set and not empty (No fallback to insecure defaults)
+if [ -z "$RCON_PASSWORD" ]; then
+    echo "[-] FATAL ERROR: RCON_PASSWORD environment variable is required and must not be empty!" >&2
+    exit 1
+fi
+
 if [ -f "/data/server.properties" ]; then
-    sed -i "s/\${RCON_PASSWORD}/${RCON_PASSWORD:-admin123}/g" /data/server.properties
+    sed -i "s/\${RCON_PASSWORD}/${RCON_PASSWORD}/g" /data/server.properties
 fi
 
 MIN_RAM=${MINECRAFT_RAM_MIN:-4G}

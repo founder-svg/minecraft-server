@@ -160,8 +160,8 @@ docker compose logs -f backend
 Once started:
 - **Minecraft Java Edition**: Connect to `localhost:25565`
 - **Minecraft Bedrock Edition**: Connect to `localhost` on port `19132`
-- **Admin Dashboard**: Open `http://localhost:8080` in your browser (Default admin: `admin` / `admin123`)
-- **Backend API**: Accessible at `http://localhost:3000/api`
+- **Admin Dashboard**: Open `http://localhost:8080` (or via private Tailscale VPN). Run `./infrastructure/security/setup-admin.sh` to generate your initial high-entropy Owner/Superadmin credentials. (Zero default passwords are accepted).
+- **Backend API**: Accessible internally at `http://localhost:3000/api`
 
 ---
 

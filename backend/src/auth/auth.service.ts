@@ -31,8 +31,18 @@ export class AuthService {
   async login(user: any) {
     const payload = { username: user.username, sub: user.id, role: user.role };
     await this.db.query('UPDATE admin_users SET last_login = CURRENT_TIMESTAMP WHERE id = $1', [user.id]);
+
+    // Finding 7: Short-lived access token (15m) + secure refresh token (7d)
+    const accessToken = this.jwtService.sign(payload, { expiresIn: '15m' });
+    const refreshToken = this.jwtService.sign(
+      { sub: user.id, type: 'refresh' },
+      { expiresIn: '7d' },
+    );
+
     return {
-      access_token: this.jwtService.sign(payload),
+      access_token: accessToken,
+      refresh_token: refreshToken,
+      expires_in: 900, // 15 minutes
       user: {
         id: user.id,
         username: user.username,
@@ -40,5 +50,35 @@ export class AuthService {
         role: user.role,
       },
     };
+  }
+
+  async refresh(refreshToken: string) {
+    try {
+      const decoded = this.jwtService.verify(refreshToken);
+      if (decoded.type !== 'refresh') {
+        throw new UnauthorizedException('Invalid token type');
+      }
+
+      const res = await this.db.query(
+        'SELECT id, username, email, role, is_active FROM admin_users WHERE id = $1',
+        [decoded.sub],
+      );
+      if (res.rows.length === 0 || !res.rows[0].is_active) {
+        throw new UnauthorizedException('User account no longer active');
+      }
+
+      const user = res.rows[0];
+      const newAccessToken = this.jwtService.sign(
+        { username: user.username, sub: user.id, role: user.role },
+        { expiresIn: '15m' },
+      );
+
+      return {
+        access_token: newAccessToken,
+        expires_in: 900,
+      };
+    } catch {
+      throw new UnauthorizedException('Refresh token is invalid or expired');
+    }
   }
 }

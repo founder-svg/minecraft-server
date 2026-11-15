@@ -151,18 +151,27 @@
           <span id="topServerStatusText">Server Online</span>
         </div>
         <span class="ribbon-sep">|</span>
-        <div class="ribbon-metric">Uptime: <strong id="topUptimeText">2h 34m</strong></div>
+        <div class="ribbon-metric">Uptime: <strong id="topUptimeText">0h 05m</strong></div>
         <span class="ribbon-sep">|</span>
         <div class="ribbon-metric">TPS: <strong id="topTpsText">20.00</strong></div>
         <span class="ribbon-sep">|</span>
-        <div class="ribbon-metric">Players: <strong id="topPlayersText">12 / 100</strong></div>
+        <div class="ribbon-metric">Players: <strong id="topPlayersText">0 / 100</strong></div>
+        <span class="ribbon-sep">|</span>
+        <button class="btn-action-sm" onclick="openModal('serverConnectionModal')" style="background: rgba(255, 107, 0, 0.15); border: 1px solid var(--wix-orange); color: #fff;" title="Configure Live Server IP & Ports">
+          🌐 Connect Game IP & Port
+        </button>
       </div>
 
       <div class="top-actions">
+        <!-- Client Delivery Reset Button -->
+        <button class="btn-action-sm" onclick="resetConsoleToPristine()" title="Reset to Factory Pristine Delivery State" style="font-size: 11px;">
+          🔄 Factory Reset
+        </button>
+
         <!-- Notification Bell with Count Badge -->
         <button class="icon-btn" onclick="openModal('notificationsModal')" title="View Pending Reports & Alerts">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
-          <span class="badge-count" id="notificationBadgeCount">3</span>
+          <span class="badge-count" id="notificationBadgeCount">0</span>
         </button>
 
         <!-- Fullscreen Toggle -->
@@ -1696,6 +1705,83 @@
     <div class="modal-footer">
       <button class="btn-secondary" onclick="closeModal('banModal')">Cancel</button>
       <button class="btn-danger" onclick="executeBan()">Confirm Punishment</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Live Game & Server Connection Settings -->
+<div id="serverConnectionModal" class="modal-backdrop">
+  <div class="modal-sheet" style="max-width: 640px;">
+    <div class="modal-header">
+      <h3 style="color: var(--wix-orange);">🌐 Live Game & Server Connection Settings</h3>
+      <button class="modal-close-btn" onclick="closeModal('serverConnectionModal')">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div style="background: rgba(255, 107, 0, 0.08); border: 1px solid rgba(255, 107, 0, 0.3); border-radius: var(--radius-sm); padding: 12px; font-size: 12.5px; line-height: 1.5; color: #fed7aa;">
+        <strong>CONNECTION ARCHITECTURE:</strong> This Admin Console is served via GitHub Pages for 100% uptime. To manage players, execute RCON commands, or view live server telemetry, connect it to your Cloud VPS IP and ports below.
+      </div>
+
+      <!-- Player Connection Section -->
+      <div style="background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border-color); border-radius: 8px; padding: 14px;">
+        <h4 style="color: #fff; font-size: 13px; margin-bottom: 8px; display: flex; align-items: center; gap: 6px;">
+          🎮 Public Player Connection Details (Share with Players)
+        </h4>
+
+        <!-- Java Player Box -->
+        <div style="margin-bottom: 12px;">
+          <div style="display: flex; justify-content: space-between; font-size: 11.5px; color: var(--text-muted); margin-bottom: 4px;">
+            <span><strong>Minecraft Java Edition</strong> (PC / Mac / Linux)</span>
+            <span class="badge badge-java">TCP Port 25565</span>
+          </div>
+          <div style="display: flex; gap: 8px;">
+            <input type="text" id="connJavaAddress" class="form-input" style="flex: 1; font-family: var(--font-mono); font-size: 12px;" value="play.wixfox.net:25565">
+            <button class="btn-action-sm" onclick="copyToClipboard('connJavaAddress', 'Java server address copied!')">📋 Copy</button>
+          </div>
+          <span style="font-size: 10.5px; color: var(--text-dim);">Players connect via: <em>Multiplayer &gt; Direct Connect / Add Server</em></span>
+        </div>
+
+        <!-- Bedrock Player Box -->
+        <div>
+          <div style="display: flex; justify-content: space-between; font-size: 11.5px; color: var(--text-muted); margin-bottom: 4px;">
+            <span><strong>Minecraft Bedrock Edition</strong> (Mobile / iOS / Android / Console)</span>
+            <span class="badge badge-bedrock">UDP Port 19132</span>
+          </div>
+          <div style="display: grid; grid-template-columns: 2fr 1fr auto; gap: 8px;">
+            <input type="text" id="connBedrockAddress" class="form-input" style="font-family: var(--font-mono); font-size: 12px;" value="play.wixfox.net" placeholder="Server IP / Domain">
+            <input type="number" id="connBedrockPort" class="form-input" style="font-family: var(--font-mono); font-size: 12px;" value="19132" placeholder="Port">
+            <button class="btn-action-sm" onclick="copyToClipboard('connBedrockAddress', 'Bedrock address copied!')">📋 Copy</button>
+          </div>
+          <span style="font-size: 10.5px; color: var(--text-dim);">Players connect via: <em>Play &gt; Servers &gt; Add Server (Port: 19132)</em></span>
+        </div>
+      </div>
+
+      <!-- Backend API & Admin Console Bridge -->
+      <div style="background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border-color); border-radius: 8px; padding: 14px;">
+        <h4 style="color: #fff; font-size: 13px; margin-bottom: 8px; display: flex; align-items: center; gap: 6px;">
+          ⚡ Admin Console to Live VPS Bridge (NestJS & RCON)
+        </h4>
+
+        <div class="form-group" style="margin-bottom: 10px;">
+          <label class="form-label">Live Backend API Endpoint:</label>
+          <input type="text" id="connApiEndpoint" class="form-input" style="font-family: var(--font-mono); font-size: 12px;" value="http://127.0.0.1:3000/api" placeholder="e.g. https://api.wixfox.net/api or http://YOUR_VPS_IP:3000/api">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Admin API Key / JWT Token:</label>
+          <input type="password" id="connAdminKey" class="form-input" style="font-family: var(--font-mono); font-size: 12px;" placeholder="Optional: Enter administrative bearer token for live RCON sync">
+        </div>
+
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 12px;">
+          <span id="connLivePingStatus" style="font-size: 11.5px; color: var(--accent-green); font-family: var(--font-mono);">
+            ● Telemetry: Local Demonstration Mode (Pristine)
+          </span>
+          <button class="btn-action-sm" onclick="testLiveServerPing()">📡 Ping Server Test</button>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeModal('serverConnectionModal')">Close</button>
+      <button class="btn-primary" onclick="saveServerConnectionSettings()">Save Connection Settings</button>
     </div>
   </div>
 </div>

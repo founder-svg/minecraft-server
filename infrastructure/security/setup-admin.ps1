@@ -1,4 +1,4 @@
-﻿# ===================================================================
+# ===================================================================
 # Wixfox Minecraft Network — Initial Superadmin Provisioning (PowerShell)
 # Enforces SEC-001 & SEC-005 (Zero Default Credentials Policy)
 # ===================================================================

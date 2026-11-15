@@ -7,7 +7,7 @@
   <link rel="icon" type="image/svg+xml" href="assets/logo.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
@@ -43,7 +43,7 @@
       </div>
     </div>
 
-    <!-- Navigation Items -->
+    <!-- Navigation Items (All 10 Core Modules) -->
     <nav class="sidebar-nav">
       <a class="nav-item active" data-tab="dashboard">
         <span class="nav-icon">
@@ -141,25 +141,25 @@
       <div class="server-live-ribbon">
         <div class="status-badge">
           <span class="status-dot"></span>
-          <span>Server Online</span>
+          <span id="topServerStatusText">Server Online</span>
         </div>
         <span class="ribbon-sep">|</span>
-        <div class="ribbon-metric">Uptime: <strong>2h 34m</strong></div>
+        <div class="ribbon-metric">Uptime: <strong id="topUptimeText">2h 34m</strong></div>
         <span class="ribbon-sep">|</span>
-        <div class="ribbon-metric">TPS: <strong>20.00</strong></div>
+        <div class="ribbon-metric">TPS: <strong id="topTpsText">20.00</strong></div>
         <span class="ribbon-sep">|</span>
-        <div class="ribbon-metric">Players: <strong>12 / 100</strong></div>
+        <div class="ribbon-metric">Players: <strong id="topPlayersText">12 / 100</strong></div>
       </div>
 
       <div class="top-actions">
         <!-- Notification Bell with Count Badge -->
-        <button class="icon-btn" onclick="showToast('3 active player reports waiting review', 'warning')">
+        <button class="icon-btn" onclick="openModal('notificationsModal')" title="View Pending Reports & Alerts">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
-          <span class="badge-count">3</span>
+          <span class="badge-count" id="notificationBadgeCount">3</span>
         </button>
 
         <!-- Fullscreen Toggle -->
-        <button class="icon-btn" onclick="document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen()">
+        <button class="icon-btn" onclick="toggleFullscreen()" title="Toggle Fullscreen">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
         </button>
       </div>
@@ -186,7 +186,7 @@
 
           <!-- Quick Action Buttons -->
           <div class="quick-actions-panel">
-            <button class="quick-action-btn btn-green" onclick="triggerServerRestart()">
+            <button class="quick-action-btn btn-green" onclick="openModal('restartConfirmModal')">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></svg>
               <span>Restart Server</span>
             </button>
@@ -211,13 +211,13 @@
         <!-- 4 Glowing Metric Cards -->
         <div class="stats-row">
           <!-- Card 1: Online Players -->
-          <div class="stat-card">
+          <div class="stat-card" onclick="switchTab('players')" style="cursor: pointer;">
             <div class="stat-icon-box purple">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
             </div>
             <div class="stat-content">
               <div class="stat-value-row">
-                <span class="stat-value">12</span>
+                <span class="stat-value" id="dashPlayersVal">12</span>
                 <span class="stat-badge pos">↑ +2</span>
               </div>
               <div class="stat-label">Online Players</div>
@@ -225,7 +225,7 @@
           </div>
 
           <!-- Card 2: TPS -->
-          <div class="stat-card">
+          <div class="stat-card" onclick="switchTab('server')" style="cursor: pointer;">
             <div class="stat-icon-box green">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="16" height="16" x="4" y="4" rx="2"/><rect width="6" height="6" x="9" y="9" rx="1"/><path d="M15 2v2"/><path d="M15 20v2"/><path d="M2 15h2"/><path d="M2 9h2"/><path d="M20 15h2"/><path d="M20 9h2"/><path d="M9 2v2"/><path d="M9 20v2"/></svg>
             </div>
@@ -239,7 +239,7 @@
           </div>
 
           <!-- Card 3: MSPT -->
-          <div class="stat-card">
+          <div class="stat-card" onclick="switchTab('server')" style="cursor: pointer;">
             <div class="stat-icon-box blue">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m12 14 4-4"/><path d="M3.34 19a10 10 0 1 1 17.32 0"/></svg>
             </div>
@@ -253,7 +253,7 @@
           </div>
 
           <!-- Card 4: Database Health -->
-          <div class="stat-card">
+          <div class="stat-card" onclick="switchTab('settings')" style="cursor: pointer;">
             <div class="stat-icon-box orange">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5V19A9 3 0 0 0 21 19V5"/><path d="M3 12A9 3 0 0 0 21 12"/></svg>
             </div>
@@ -283,7 +283,7 @@
           <div class="card-panel">
             <div class="card-panel-header">
               <h3 class="card-panel-title">Server Status</h3>
-              <span class="server-status-pill">Running</span>
+              <span class="server-status-pill" id="serverStatePill">Running</span>
             </div>
             <!-- Live Canvas Waveform -->
             <div class="chart-container">
@@ -294,20 +294,20 @@
               <div class="progress-row">
                 <div class="progress-label-wrap">
                   <span>CPU Usage</span>
-                  <strong>32%</strong>
+                  <strong id="cpuUsageVal">32%</strong>
                 </div>
                 <div class="progress-bar-track">
-                  <div class="progress-bar-fill fill-green" style="width: 32%;"></div>
+                  <div class="progress-bar-fill fill-green" id="cpuBarFill" style="width: 32%;"></div>
                 </div>
               </div>
 
               <div class="progress-row">
                 <div class="progress-label-wrap">
                   <span>Memory Usage</span>
-                  <strong>64%</strong>
+                  <strong id="memUsageVal">64%</strong>
                 </div>
                 <div class="progress-bar-track">
-                  <div class="progress-bar-fill fill-purple" style="width: 64%;"></div>
+                  <div class="progress-bar-fill fill-purple" id="memBarFill" style="width: 64%;"></div>
                 </div>
               </div>
 
@@ -348,14 +348,14 @@
                 <div class="mode-thumb smp"></div>
                 <div class="mode-details">
                   <div class="mode-name">Survival SMP</div>
-                  <div class="mode-count">12 Players</div>
+                  <div class="mode-count">12 Players Active</div>
                 </div>
               </div>
 
               <div class="mode-card" onclick="openModal('gameModeManagerModal')">
                 <div class="mode-thumb lobby"></div>
                 <div class="mode-details">
-                  <div class="mode-name">Lobby</div>
+                  <div class="mode-name">Lobby Hub</div>
                   <div class="mode-count">0 Players</div>
                 </div>
               </div>
@@ -429,67 +429,621 @@
       </section>
 
       <!-- =============================================================
-           VIEW 2: SERVER CONSOLE & RCON TERMINAL
+           VIEW 2: PLAYER MANAGEMENT (PRD Sections 4 & 5)
            ============================================================= -->
-      <section id="view-server" class="view-pane" style="display: none; flex-direction: column; gap: 16px;">
+      <section id="view-players" class="view-pane" style="display: none; flex-direction: column; gap: 16px;">
         <div class="card-panel">
           <div class="card-panel-header">
-            <h3 class="card-panel-title">RCON Interactive Server Command Console</h3>
-            <span class="server-status-pill">Paper 1.20.4 Connected</span>
+            <div>
+              <h3 class="card-panel-title">Player Directory & Live Controls</h3>
+              <p style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">Search, teleport, moderate, adjust game mode, or inspect player inventories in real time.</p>
+            </div>
+            <div style="display: flex; gap: 10px;">
+              <button class="btn-primary" onclick="showToast('Opened Whitelist management', 'info')">+ Add Whitelist</button>
+            </div>
           </div>
+
+          <!-- Filter & Search Toolbar -->
+          <div class="filter-bar">
+            <div class="search-input-wrap">
+              <span class="search-icon-inside">🔍</span>
+              <input type="text" id="playerSearchInput" class="form-input" placeholder="Search by username, UUID, or rank..." oninput="filterPlayersTable()">
+            </div>
+            <div class="filter-pills">
+              <button class="filter-pill active" onclick="setPlayerFilter('all', this)">All (6)</button>
+              <button class="filter-pill" onclick="setPlayerFilter('online', this)">Online (5)</button>
+              <button class="filter-pill" onclick="setPlayerFilter('java', this)">Java (4)</button>
+              <button class="filter-pill" onclick="setPlayerFilter('bedrock', this)">Bedrock (2)</button>
+              <button class="filter-pill" onclick="setPlayerFilter('banned', this)">Banned (1)</button>
+            </div>
+          </div>
+
+          <!-- Players Table -->
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Player</th>
+                  <th>Platform</th>
+                  <th>Game Mode</th>
+                  <th>Rank</th>
+                  <th>World</th>
+                  <th>Health / Food</th>
+                  <th>IP Address</th>
+                  <th>Status</th>
+                  <th>Quick Actions</th>
+                </tr>
+              </thead>
+              <tbody id="fullPlayersTableBody">
+                <!-- Rendered dynamically by js/app.js -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- =============================================================
+           VIEW 3: SERVER MANAGEMENT & RCON CONSOLE (PRD Section 2)
+           ============================================================= -->
+      <section id="view-server" class="view-pane" style="display: none; flex-direction: column; gap: 16px;">
+        <!-- Server Control Action Ribbon -->
+        <div class="card-panel" style="padding: 14px 20px;">
+          <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;">
+            <div style="display: flex; align-items: center; gap: 12px;">
+              <span class="status-dot"></span>
+              <div>
+                <strong style="color: #fff; font-size: 14px;">Wixfox Paper 1.20.4 Master Node</strong>
+                <div style="font-size: 11px; color: var(--text-muted); font-family: var(--font-mono);">PID: 4092 • Port: 25565 (Java) / 19132 (Bedrock) • Memory: 4096MB</div>
+              </div>
+            </div>
+
+            <div style="display: flex; gap: 8px;">
+              <button class="btn-action-sm" onclick="showToast('Server start signal sent', 'info')">▶ Start</button>
+              <button class="btn-action-sm" onclick="openModal('restartConfirmModal')">🔄 Graceful Restart</button>
+              <button class="btn-action-sm danger" onclick="showToast('Emergency stop command dispatched to container', 'error')">⏹ Stop Server</button>
+              <button class="btn-action-sm" onclick="clearConsole()">🧹 Clear Console</button>
+              <button class="btn-action-sm" onclick="downloadLogs()">⬇ Download Logs</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-panel">
+          <div class="card-panel-header">
+            <h3 class="card-panel-title">RCON Interactive Server Terminal</h3>
+            <span class="server-status-pill">Connected &bull; Paper 1.20.4</span>
+          </div>
+
           <div id="terminalLogOutput" style="background: #030712; border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 14px; font-family: var(--font-mono); font-size: 12px; height: 380px; overflow-y: auto; display: flex; flex-direction: column; gap: 4px; color: #94a3b8;">
-            <div>[00:10:01 INFO]: [NetworkCore] PostgreSQL HikariPool healthy with 5 active connections.</div>
-            <div>[00:11:42 INFO]: [Geyser-Spigot] Player BuilderKing (Bedrock) joined the server.</div>
-            <div>[00:12:05 INFO]: [EconomyCore] Processed transfer of $250.00 Coins from StevePro to BuilderKing.</div>
-            <div>[00:14:19 INFO]: [Paper] Server TPS: 20.00, MSPT: 45ms. Entity count: 184.</div>
+            <!-- Console log output -->
+          </div>
+
+          <!-- Suggested Quick Command Chips -->
+          <div class="cmd-chips-wrap">
+            <span style="font-size: 11px; color: var(--text-dim); margin-right: 4px;">Quick Commands:</span>
+            <button class="cmd-chip" onclick="quickRunCommand('tps')">tps</button>
+            <button class="cmd-chip" onclick="quickRunCommand('list')">list</button>
+            <button class="cmd-chip" onclick="quickRunCommand('save-all')">save-all</button>
+            <button class="cmd-chip" onclick="quickRunCommand('whitelist on')">whitelist on</button>
+            <button class="cmd-chip" onclick="quickRunCommand('weather clear')">weather clear</button>
+            <button class="cmd-chip" onclick="quickRunCommand('time set day')">time set day</button>
+            <button class="cmd-chip" onclick="quickRunCommand('gamerule keepInventory true')">keepInventory true</button>
           </div>
 
           <form id="rconForm" style="display: flex; gap: 10px; margin-top: 14px;">
-            <input type="text" id="rconCommandInput" class="form-input" style="flex: 1; font-family: var(--font-mono);" placeholder="Type a Minecraft server command (e.g. tps, gamemode survival StevePro, kill, say Hello)...">
+            <input type="text" id="rconCommandInput" class="form-input" style="flex: 1; font-family: var(--font-mono);" placeholder="Type a Minecraft server command (e.g. tps, gamemode survival StevePro, kill BadPlayer, say Welcome)...">
             <button type="submit" class="btn-primary">Execute Command</button>
           </form>
         </div>
       </section>
 
       <!-- =============================================================
-           VIEW 3: AUDIT LOGS TABLE
+           VIEW 4: ECONOMY MODULE (PRD Vault & PostgreSQL Ledger)
+           ============================================================= -->
+      <section id="view-economy" class="view-pane" style="display: none; flex-direction: column; gap: 16px;">
+        <!-- 4 Economy Cards -->
+        <div class="stats-row">
+          <div class="stat-card">
+            <div class="stat-icon-box orange">💰</div>
+            <div class="stat-content">
+              <div class="stat-value">$142,500</div>
+              <div class="stat-label">Currency in Circulation</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon-box green">📈</div>
+            <div class="stat-content">
+              <div class="stat-value">2.5%</div>
+              <div class="stat-label">Server Market Tax</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon-box purple">⭐</div>
+            <div class="stat-content">
+              <div class="stat-value">StevePro</div>
+              <div class="stat-label">Richest Player ($45,200)</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon-box blue">💳</div>
+            <div class="stat-content">
+              <div class="stat-value">$18,420</div>
+              <div class="stat-label">24h Volume (148 Tx)</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-panel">
+          <div class="card-panel-header">
+            <h3 class="card-panel-title">Player Bank & Wallet Balances (ACID Ledger)</h3>
+            <button class="btn-primary" onclick="openGiveCoinsModal()">+ Deposit / Give Coins</button>
+          </div>
+
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Player</th>
+                  <th>Rank</th>
+                  <th>Wallet Balance</th>
+                  <th>Bank Balance</th>
+                  <th>Total Net Worth</th>
+                  <th>Last Transaction</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="economyTableBody">
+                <!-- Rendered dynamically by js/app.js -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- =============================================================
+           VIEW 5: RANKS & PERMISSIONS (PRD Section 3 & LuckPerms)
+           ============================================================= -->
+      <section id="view-ranks" class="view-pane" style="display: none; flex-direction: column; gap: 16px;">
+        <div class="card-panel">
+          <div class="card-panel-header">
+            <h3 class="card-panel-title">Role-Based Access Hierarchy (LuckPerms Integration)</h3>
+            <button class="btn-primary" onclick="showToast('Synchronized with LuckPerms SQLite/PostgreSQL store', 'success')">Sync Permissions</button>
+          </div>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; margin-bottom: 20px;">
+            <div style="background: rgba(239, 68, 68, 0.08); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: var(--radius-md); padding: 14px;">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <strong style="color: #ef4444; font-size: 14px;">👑 Owner / Super Admin</strong>
+                <span class="badge" style="background: #ef4444; color: #fff;">Weight 100</span>
+              </div>
+              <p style="font-size: 11.5px; color: var(--text-muted); margin-top: 6px;">Unrestricted server access: world uploads, plugins, console, deployments, and destructive actions.</p>
+            </div>
+
+            <div style="background: rgba(249, 115, 22, 0.08); border: 1px solid rgba(249, 115, 22, 0.3); border-radius: var(--radius-md); padding: 14px;">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <strong style="color: #f97316; font-size: 14px;">🛡️ Admin</strong>
+                <span class="badge" style="background: #f97316; color: #fff;">Weight 80</span>
+              </div>
+              <p style="font-size: 11.5px; color: var(--text-muted); margin-top: 6px;">Player management, game mode changes, instant kill, bans, IP-bans, teleportation, and approved assets.</p>
+            </div>
+
+            <div style="background: rgba(139, 92, 246, 0.08); border: 1px solid rgba(139, 92, 246, 0.3); border-radius: var(--radius-md); padding: 14px;">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <strong style="color: #8b5cf6; font-size: 14px;">⚖️ Moderator</strong>
+                <span class="badge" style="background: #8b5cf6; color: #fff;">Weight 60</span>
+              </div>
+              <p style="font-size: 11.5px; color: var(--text-muted); margin-top: 6px;">Kick, ban, and mute players. Review reports. No console, plugin, or world upload access.</p>
+            </div>
+
+            <div style="background: rgba(6, 182, 212, 0.08); border: 1px solid rgba(6, 182, 212, 0.3); border-radius: var(--radius-md); padding: 14px;">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <strong style="color: #06b6d4; font-size: 14px;">💻 Developer</strong>
+                <span class="badge" style="background: #06b6d4; color: #fff;">Weight 50</span>
+              </div>
+              <p style="font-size: 11.5px; color: var(--text-muted); margin-top: 6px;">Test game modes in staging, review technical logs, and configure server components.</p>
+            </div>
+          </div>
+
+          <!-- Rank Assignment Form -->
+          <div style="background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 16px; margin-bottom: 20px;">
+            <h4 style="font-size: 13px; color: #fff; margin-bottom: 10px;">Quick Player Rank Assignment</h4>
+            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+              <select id="rankAssignPlayerSelect" class="form-select" style="min-width: 180px;">
+                <option value="StevePro">StevePro (Current: VIP)</option>
+                <option value="BuilderKing">BuilderKing (Current: Premium)</option>
+                <option value="FoxGamer">FoxGamer (Current: Member)</option>
+                <option value="Dreamer">Dreamer (Current: Member)</option>
+                <option value="MinecraftFan">MinecraftFan (Current: Member)</option>
+              </select>
+
+              <select id="rankAssignRoleSelect" class="form-select" style="min-width: 160px;">
+                <option value="VIP">VIP</option>
+                <option value="Premium">Premium</option>
+                <option value="Moderator">Moderator</option>
+                <option value="Admin">Admin</option>
+                <option value="Member">Member</option>
+              </select>
+
+              <button class="btn-primary" onclick="executeAssignRank()">Apply Rank (/lp user parent set)</button>
+            </div>
+          </div>
+
+          <!-- Permission Nodes Editor -->
+          <h4 style="font-size: 13px; color: #fff; margin-bottom: 10px;">Configured Permission Nodes</h4>
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Permission Node</th>
+                  <th>Assigned Roles</th>
+                  <th>Description</th>
+                  <th>Status</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="permissionNodesTableBody">
+                <!-- Rendered by js/app.js -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- =============================================================
+           VIEW 6: MODERATION SERVICE (PRD Section 5.3 & 5.4)
+           ============================================================= -->
+      <section id="view-moderation" class="view-pane" style="display: none; flex-direction: column; gap: 16px;">
+        <div class="card-panel">
+          <div class="card-panel-header">
+            <h3 class="card-panel-title">Moderation & Enforcement Center</h3>
+            <button class="btn-danger" onclick="openModal('banModal')">+ Issue New Punishment</button>
+          </div>
+
+          <div class="filter-pills" style="margin-bottom: 14px;">
+            <button class="filter-pill active" onclick="switchModSubTab('bans', this)">Active Bans (1)</button>
+            <button class="filter-pill" onclick="switchModSubTab('mutes', this)">Active Mutes (1)</button>
+            <button class="filter-pill" onclick="switchModSubTab('ipbans', this)">IP-Bans (1)</button>
+            <button class="filter-pill" onclick="switchModSubTab('reports', this)">Pending Reports (3)</button>
+          </div>
+
+          <!-- Active Bans Subview -->
+          <div id="modSubTab-bans" class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Player</th>
+                  <th>UUID</th>
+                  <th>Punishment Type</th>
+                  <th>Reason</th>
+                  <th>Issued By</th>
+                  <th>Expires</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="activeBansTableBody">
+                <!-- Rendered by js/app.js -->
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Active Mutes Subview -->
+          <div id="modSubTab-mutes" class="table-responsive" style="display: none;">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Player</th>
+                  <th>Mute Duration</th>
+                  <th>Reason</th>
+                  <th>Staff Actor</th>
+                  <th>Expires</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="activeMutesTableBody">
+                <!-- Rendered by js/app.js -->
+              </tbody>
+            </table>
+          </div>
+
+          <!-- IP-Bans Subview -->
+          <div id="modSubTab-ipbans" class="table-responsive" style="display: none;">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>IP Address</th>
+                  <th>Associated Account</th>
+                  <th>Reason</th>
+                  <th>Staff Actor</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="activeIPBansTableBody">
+                <!-- Rendered by js/app.js -->
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Pending Reports Subview -->
+          <div id="modSubTab-reports" class="table-responsive" style="display: none;">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Reported Player</th>
+                  <th>Reporter</th>
+                  <th>Category</th>
+                  <th>Evidence Snippet</th>
+                  <th>Time</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="activeReportsTableBody">
+                <!-- Rendered by js/app.js -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- =============================================================
+           VIEW 7: BACKUPS MODULE (PRD Section 6.2)
+           ============================================================= -->
+      <section id="view-backups" class="view-pane" style="display: none; flex-direction: column; gap: 16px;">
+        <div class="card-panel">
+          <div class="card-panel-header">
+            <div>
+              <h3 class="card-panel-title">Automated Server & Database Backups</h3>
+              <p style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">Daily automated snapshot archives (Worlds, SQLite/PostgreSQL, plugins, and server configs).</p>
+            </div>
+            <button class="btn-primary" onclick="triggerBackupNow()">+ Create Backup Now</button>
+          </div>
+
+          <!-- Backup Storage Bar -->
+          <div style="background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 14px; margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;">
+            <div>
+              <span style="font-size: 12px; color: var(--text-muted);">Backup Storage Pool:</span>
+              <strong style="color: #fff; margin-left: 6px;">4.2 GB / 50 GB Used (8.4%)</strong>
+            </div>
+            <span class="badge badge-online">Auto-Backup: Active (Every 6h)</span>
+          </div>
+
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Archive Filename</th>
+                  <th>Type</th>
+                  <th>Size</th>
+                  <th>Timestamp</th>
+                  <th>SHA-256 Checksum</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="backupsTableBody">
+                <!-- Rendered by js/app.js -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- =============================================================
+           VIEW 8: GAME MODE FILE MANAGER (PRD Section 6)
+           ============================================================= -->
+      <section id="view-files" class="view-pane" style="display: none; flex-direction: column; gap: 16px;">
+        <div class="card-panel">
+          <div class="card-panel-header">
+            <div>
+              <h3 class="card-panel-title">Game Mode File Manager & Deployer</h3>
+              <p style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">Deploy worlds, approved plugins, datapacks, and configurations with staging verification safeguards.</p>
+            </div>
+            <button class="btn-primary perm-upload" onclick="openModal('uploadAssetModal')">+ Upload New Asset</button>
+          </div>
+
+          <!-- Dropzone -->
+          <div class="file-dropzone perm-upload" onclick="openModal('uploadAssetModal')">
+            <div class="file-dropzone-icon">📦</div>
+            <strong style="color: #fff; font-size: 14px; display: block;">Drag and drop World ZIP, Plugin JAR, or Datapack here</strong>
+            <span style="font-size: 12px; color: var(--text-muted);">Files will be validated with SHA-256 and sent to staging before production deployment.</span>
+          </div>
+
+          <!-- Active Files Table -->
+          <div class="table-responsive" style="margin-top: 16px;">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Asset Name</th>
+                  <th>Category</th>
+                  <th>Version</th>
+                  <th>File Size</th>
+                  <th>Deployment Target</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="fileManagerTableBody">
+                <!-- Rendered by js/app.js -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- =============================================================
+           VIEW 9: ANALYTICS & INSIGHTS
+           ============================================================= -->
+      <section id="view-analytics" class="view-pane" style="display: none; flex-direction: column; gap: 16px;">
+        <div class="stats-row">
+          <div class="stat-card">
+            <div class="stat-icon-box purple">👥</div>
+            <div class="stat-content">
+              <div class="stat-value">20 / 20</div>
+              <div class="stat-label">Peak Player Concurrency</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon-box green">⏱️</div>
+            <div class="stat-content">
+              <div class="stat-value">1h 42m</div>
+              <div class="stat-label">Avg Session Duration</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon-box blue">🎮</div>
+            <div class="stat-content">
+              <div class="stat-value">62% / 38%</div>
+              <div class="stat-label">Java vs Bedrock Ratio</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon-box orange">🔁</div>
+            <div class="stat-content">
+              <div class="stat-value">84.2%</div>
+              <div class="stat-label">7-Day Retention Rate</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="middle-grid">
+          <div class="card-panel" style="grid-column: span 2;">
+            <div class="card-panel-header">
+              <h3 class="card-panel-title">24-Hour Concurrency Curve</h3>
+              <span class="badge badge-online">Realtime Telemetry</span>
+            </div>
+            <div style="height: 220px; display: flex; align-items: flex-end; gap: 8px; padding-top: 20px; border-bottom: 1px solid var(--border-color);">
+              <div style="flex: 1; background: var(--wix-orange); height: 35%; border-radius: 4px 4px 0 0;" title="00:00 - 7 players"></div>
+              <div style="flex: 1; background: var(--wix-orange); height: 25%; border-radius: 4px 4px 0 0;" title="03:00 - 5 players"></div>
+              <div style="flex: 1; background: var(--wix-orange); height: 20%; border-radius: 4px 4px 0 0;" title="06:00 - 4 players"></div>
+              <div style="flex: 1; background: var(--wix-orange); height: 45%; border-radius: 4px 4px 0 0;" title="09:00 - 9 players"></div>
+              <div style="flex: 1; background: var(--wix-orange); height: 70%; border-radius: 4px 4px 0 0;" title="12:00 - 14 players"></div>
+              <div style="flex: 1; background: var(--wix-orange); height: 85%; border-radius: 4px 4px 0 0;" title="15:00 - 17 players"></div>
+              <div style="flex: 1; background: var(--wix-orange); height: 100%; border-radius: 4px 4px 0 0;" title="18:00 - 20 players (Peak)"></div>
+              <div style="flex: 1; background: var(--wix-orange); height: 90%; border-radius: 4px 4px 0 0;" title="21:00 - 18 players"></div>
+            </div>
+            <div style="display: flex; justify-content: space-between; font-size: 11px; color: var(--text-dim); margin-top: 8px;">
+              <span>00:00</span><span>06:00</span><span>12:00</span><span>18:00 (Peak)</span><span>23:59</span>
+            </div>
+          </div>
+
+          <div class="card-panel">
+            <div class="card-panel-header">
+              <h3 class="card-panel-title">Platform Distribution</h3>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 14px; margin-top: 10px;">
+              <div>
+                <div style="display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 4px;">
+                  <span>Java Edition (PC/Mac/Linux)</span>
+                  <strong>62%</strong>
+                </div>
+                <div class="progress-bar-track">
+                  <div class="progress-bar-fill fill-green" style="width: 62%;"></div>
+                </div>
+              </div>
+
+              <div>
+                <div style="display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 4px;">
+                  <span>Bedrock Edition (Mobile/Console)</span>
+                  <strong>38%</strong>
+                </div>
+                <div class="progress-bar-track">
+                  <div class="progress-bar-fill fill-blue" style="width: 38%;"></div>
+                </div>
+              </div>
+
+              <div style="font-size: 11.5px; color: var(--text-dim); line-height: 1.4; margin-top: 8px;">
+                GeyserMC and Floodgate v2.2.3 handles automatic Xbox Live authentication and cross-play translation with zero latency penalties.
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- =============================================================
+           VIEW 10: SETTINGS (server.properties)
+           ============================================================= -->
+      <section id="view-settings" class="view-pane" style="display: none; flex-direction: column; gap: 16px;">
+        <div class="card-panel">
+          <div class="card-panel-header">
+            <h3 class="card-panel-title">Server Configuration (server.properties)</h3>
+            <button class="btn-primary" onclick="executeSaveSettings()">Save & Apply Changes</button>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+            <div class="form-group">
+              <label class="form-label">Server Name / MOTD</label>
+              <input type="text" id="cfgMotd" class="form-input" value="Wixfox Minecraft Network [1.20.4]">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Max Player Capacity</label>
+              <input type="number" id="cfgMaxPlayers" class="form-input" value="100">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Java Server Port (TCP)</label>
+              <input type="number" id="cfgJavaPort" class="form-input" value="25565" disabled>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">GeyserMC Bedrock Port (UDP)</label>
+              <input type="number" id="cfgBedrockPort" class="form-input" value="19132" disabled>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">View Distance (Chunks)</label>
+              <input type="number" id="cfgViewDistance" class="form-input" value="10">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Simulation Distance (Chunks)</label>
+              <input type="number" id="cfgSimDistance" class="form-input" value="6">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">World Difficulty</label>
+              <select id="cfgDifficulty" class="form-select">
+                <option value="easy">Easy</option>
+                <option value="normal" selected>Normal</option>
+                <option value="hard">Hard</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">PvP Combat</label>
+              <select id="cfgPvP" class="form-select">
+                <option value="true" selected>Enabled (Allow PvP)</option>
+                <option value="false">Disabled (Safe Zones)</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- =============================================================
+           VIEW 11: AUDIT LOGS TABLE
            ============================================================= -->
       <section id="view-audit" class="view-pane" style="display: none; flex-direction: column; gap: 16px;">
         <div class="card-panel">
           <div class="card-panel-header">
             <h3 class="card-panel-title">Administrative Audit Trail (Immutable Log)</h3>
-            <button class="btn-secondary" onclick="showToast('Audit logs exported to CSV', 'success')">Export CSV</button>
+            <button class="btn-secondary" onclick="exportAuditCSV()">Export CSV</button>
           </div>
-          <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 12.5px;">
-            <thead style="border-bottom: 1px solid var(--border-color); color: var(--text-muted);">
-              <tr>
-                <th style="padding: 10px;">Timestamp</th>
-                <th style="padding: 10px;">Staff Actor</th>
-                <th style="padding: 10px;">Role</th>
-                <th style="padding: 10px;">Action</th>
-                <th style="padding: 10px;">Target</th>
-                <th style="padding: 10px;">Execution Result</th>
-              </tr>
-            </thead>
-            <tbody id="auditTableBody" style="font-family: var(--font-mono); divide-y: 1px solid var(--border-subtle);">
-              <tr>
-                <td style="padding: 12px 10px;">2026-11-16 00:35:12</td>
-                <td style="padding: 12px 10px; font-weight: bold; color: #fff;">Admin</td>
-                <td style="padding: 12px 10px; color: var(--accent-purple);">Owner</td>
-                <td style="padding: 12px 10px; color: var(--accent-blue);">SERVER_BACKUP</td>
-                <td style="padding: 12px 10px;">world, postgres</td>
-                <td style="padding: 12px 10px; color: var(--accent-green);">SUCCESS</td>
-              </tr>
-              <tr>
-                <td style="padding: 12px 10px;">2026-11-16 00:30:05</td>
-                <td style="padding: 12px 10px; font-weight: bold; color: #fff;">Admin</td>
-                <td style="padding: 12px 10px; color: var(--accent-orange);">Admin</td>
-                <td style="padding: 12px 10px; color: var(--accent-red);">BAN_PLAYER</td>
-                <td style="padding: 12px 10px;">BadPlayer</td>
-                <td style="padding: 12px 10px; color: var(--accent-red);">BANNED (Cheating)</td>
-              </tr>
-            </tbody>
-          </table>
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Timestamp</th>
+                  <th>Staff Actor</th>
+                  <th>Role</th>
+                  <th>Action</th>
+                  <th>Target</th>
+                  <th>Execution Result</th>
+                </tr>
+              </thead>
+              <tbody id="auditTableBody">
+                <!-- Rendered by js/app.js -->
+              </tbody>
+            </table>
+          </div>
         </div>
       </section>
 
@@ -500,6 +1054,281 @@
 <!-- ===============================================================
      MODALS
      =============================================================== -->
+
+<!-- Modal: Broadcast Announcement (Fixes "Send Message" Button) -->
+<div id="broadcastModal" class="modal-backdrop">
+  <div class="modal-sheet">
+    <div class="modal-header">
+      <h3>💬 Broadcast Server Announcement</h3>
+      <button class="modal-close-btn" onclick="closeModal('broadcastModal')">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">Broadcast Type:</label>
+        <select class="form-select" id="broadcastTypeSelect">
+          <option value="chat">Chat Announcement [Broadcast]</option>
+          <option value="title">Screen Title & Subtitle (/title)</option>
+          <option value="actionbar">Actionbar Popup Message</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Target Audience:</label>
+        <select class="form-select" id="broadcastTargetSelect">
+          <option value="all">All Online Players (Java + Bedrock)</option>
+          <option value="java">Java Edition Only</option>
+          <option value="bedrock">Bedrock Edition Only</option>
+          <option value="smp">Survival SMP World Only</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Announcement Message:</label>
+        <textarea id="broadcastMessageInput" class="form-textarea" rows="3" placeholder="e.g. Server will restart for scheduled maintenance in 15 minutes!"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; cursor: pointer;">
+          <input type="checkbox" id="broadcastSoundCheckbox" checked>
+          <span>Play ding chime sound effect upon dispatch</span>
+        </label>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeModal('broadcastModal')">Cancel</button>
+      <button class="btn-primary" onclick="executeBroadcast()">Dispatch Broadcast</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Server Restart Confirmation (Fixes "Restart Server" Button) -->
+<div id="restartConfirmModal" class="modal-backdrop">
+  <div class="modal-sheet">
+    <div class="modal-header">
+      <h3 style="color: var(--wix-orange);">🔄 Server Restart Procedure</h3>
+      <button class="modal-close-btn" onclick="closeModal('restartConfirmModal')">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div style="background: rgba(255, 107, 0, 0.1); border: 1px solid rgba(255, 107, 0, 0.3); border-radius: var(--radius-sm); padding: 12px; color: #fed7aa; font-size: 13px; line-height: 1.4;">
+        <strong>SAFEGUARD WARNING:</strong> Restarting the server flushes chunk memory to disk and temporarily disconnects players.
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Restart Mode:</label>
+        <select class="form-select" id="restartCountdownSelect">
+          <option value="graceful">Graceful Countdown (Warn players 30s before kick)</option>
+          <option value="instant">Instant Restart (Flush worlds and reboot immediately)</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeModal('restartConfirmModal')">Cancel</button>
+      <button class="btn-danger" onclick="executeRestartWithCountdown()">Initiate Restart</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Game Mode Manager (Fixes clicking Game Mode cards) -->
+<div id="gameModeManagerModal" class="modal-backdrop">
+  <div class="modal-sheet">
+    <div class="modal-header">
+      <h3>🎮 Wixfox Game Modes Configuration (PRD Section 4.3)</h3>
+      <button class="modal-close-btn" onclick="closeModal('gameModeManagerModal')">&times;</button>
+    </div>
+    <div class="modal-body">
+      <p style="font-size: 12.5px; color: var(--text-muted);">Manage registered server worlds and game modes:</p>
+      
+      <div style="display: flex; flex-direction: column; gap: 10px;">
+        <div style="display: flex; align-items: center; justify-content: space-between; padding: 10px; background: rgba(255,255,255,0.02); border: 1px solid var(--border-color); border-radius: 8px;">
+          <div>
+            <strong style="color: #fff; font-size: 13px;">Survival SMP</strong>
+            <div style="font-size: 11px; color: var(--text-muted);">World: <code>world</code> • Capacity: 20 • Status: <span style="color: var(--accent-green); font-weight: bold;">ACTIVE</span></div>
+          </div>
+          <button class="btn-action-sm" onclick="showToast('Survival SMP configuration loaded', 'info')">Configure</button>
+        </div>
+
+        <div style="display: flex; align-items: center; justify-content: space-between; padding: 10px; background: rgba(255,255,255,0.02); border: 1px solid var(--border-color); border-radius: 8px;">
+          <div>
+            <strong style="color: #fff; font-size: 13px;">Lobby Hub</strong>
+            <div style="font-size: 11px; color: var(--text-muted);">World: <code>lobby_hub</code> • Capacity: 100 • Status: <span style="color: var(--accent-green); font-weight: bold;">ACTIVE</span></div>
+          </div>
+          <button class="btn-action-sm" onclick="showToast('Lobby Hub configuration loaded', 'info')">Configure</button>
+        </div>
+
+        <div style="display: flex; align-items: center; justify-content: space-between; padding: 10px; background: rgba(255,255,255,0.02); border: 1px solid var(--border-color); border-radius: 8px;">
+          <div>
+            <strong style="color: #fff; font-size: 13px;">Lifesteal SMP</strong>
+            <div style="font-size: 11px; color: var(--text-muted);">World: <code>lifesteal</code> • Capacity: 30 • Status: <span style="color: #fbbf24; font-weight: bold;">TESTING / STAGING</span></div>
+          </div>
+          <button class="btn-action-sm" onclick="showToast('Activated Lifesteal in staging', 'success')">Deploy</button>
+        </div>
+      </div>
+
+      <div style="border-top: 1px solid var(--border-subtle); padding-top: 14px; margin-top: 8px;">
+        <h4 style="font-size: 13px; color: #fff; margin-bottom: 8px;">+ Register New Game Mode</h4>
+        <div style="display: flex; gap: 8px;">
+          <input type="text" id="newGameModeNameInput" class="form-input" style="flex: 1;" placeholder="Mode name (e.g. BedWars, SkyBlock, PvP Arena)">
+          <button class="btn-primary" onclick="executeCreateGameMode()">Create</button>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeModal('gameModeManagerModal')">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Player Inventory Inspector -->
+<div id="playerInventoryModal" class="modal-backdrop">
+  <div class="modal-sheet">
+    <div class="modal-header">
+      <h3>🎒 <span id="invModalPlayerName">StevePro</span>'s Inventory Inspector</h3>
+      <button class="modal-close-btn" onclick="closeModal('playerInventoryModal')">&times;</button>
+    </div>
+    <div class="modal-body" style="align-items: center;">
+      <!-- Minecraft 9x4 Inventory -->
+      <div class="mc-inventory-wrap">
+        <div style="font-size: 11px; color: #a1a1aa; margin-bottom: 6px; font-weight: bold;">Main Inventory (27 Slots)</div>
+        <div class="mc-grid-row" id="mcInvRow1"></div>
+        <div class="mc-grid-row" id="mcInvRow2"></div>
+        <div class="mc-grid-row" id="mcInvRow3"></div>
+
+        <div style="font-size: 11px; color: #a1a1aa; margin: 10px 0 6px 0; font-weight: bold;">Hotbar (9 Slots)</div>
+        <div class="mc-grid-row" id="mcInvHotbar"></div>
+      </div>
+
+      <div style="display: flex; gap: 10px; margin-top: 10px; width: 100%;">
+        <button class="btn-secondary" style="flex: 1;" onclick="showToast('Cleared inventory for player', 'warning')">Clear Inventory</button>
+        <button class="btn-primary" style="flex: 1;" onclick="showToast('Granted Diamond Sword & 64 Golden Apples', 'success')">Give Admin Kit</button>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeModal('playerInventoryModal')">Done</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Give Coins / Balance Adjustment -->
+<div id="giveCoinsModal" class="modal-backdrop">
+  <div class="modal-sheet">
+    <div class="modal-header">
+      <h3>💰 Economy Balance Adjustment</h3>
+      <button class="modal-close-btn" onclick="closeModal('giveCoinsModal')">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">Target Player:</label>
+        <select id="giveCoinsPlayerSelect" class="form-select">
+          <option value="StevePro">StevePro</option>
+          <option value="BuilderKing">BuilderKing</option>
+          <option value="FoxGamer">FoxGamer</option>
+          <option value="Dreamer">Dreamer</option>
+          <option value="MinecraftFan">MinecraftFan</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Transaction Type:</label>
+        <select id="giveCoinsTypeSelect" class="form-select">
+          <option value="give">Deposit / Give Coins (+)</option>
+          <option value="take">Withdraw / Take Coins (-)</option>
+          <option value="set">Set Exact Balance (=)</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Amount (Coins):</label>
+        <input type="number" id="giveCoinsAmountInput" class="form-input" placeholder="e.g. 500" value="250">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeModal('giveCoinsModal')">Cancel</button>
+      <button class="btn-primary" onclick="executeGiveCoins()">Confirm Transaction</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Upload Asset (File Manager) -->
+<div id="uploadAssetModal" class="modal-backdrop">
+  <div class="modal-sheet">
+    <div class="modal-header">
+      <h3>📦 Upload New Asset (PRD Section 6)</h3>
+      <button class="modal-close-btn" onclick="closeModal('uploadAssetModal')">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">Asset Category:</label>
+        <select id="uploadCategorySelect" class="form-select">
+          <option value="Plugin">Plugin (.jar)</option>
+          <option value="World">World Archive (.zip)</option>
+          <option value="Datapack">Datapack (.zip)</option>
+          <option value="Config">Configuration (.yml / .json)</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Asset Name:</label>
+        <input type="text" id="uploadAssetNameInput" class="form-input" placeholder="e.g. custom-quests-1.0.jar">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Target Deployment:</label>
+        <select id="uploadTargetSelect" class="form-select">
+          <option value="Staging">Isolated Staging (Recommended for tests)</option>
+          <option value="Production">Direct Production (Requires Owner Role)</option>
+        </select>
+      </div>
+
+      <div style="background: rgba(34, 197, 94, 0.08); border: 1px solid rgba(34, 197, 94, 0.3); border-radius: var(--radius-sm); padding: 10px; font-size: 11.5px; color: #86efac;">
+        Automatic SHA-256 integrity checksum & dependency compatibility check will run upon upload.
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeModal('uploadAssetModal')">Cancel</button>
+      <button class="btn-primary" onclick="executeUploadAsset()">Upload & Verify</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Notifications / Reports -->
+<div id="notificationsModal" class="modal-backdrop">
+  <div class="modal-sheet">
+    <div class="modal-header">
+      <h3>🔔 Pending Player Reports & Server Alerts</h3>
+      <button class="modal-close-btn" onclick="closeModal('notificationsModal')">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div style="display: flex; flex-direction: column; gap: 10px;">
+        <div style="padding: 12px; background: rgba(239, 68, 68, 0.08); border: 1px solid rgba(239, 68, 68, 0.25); border-radius: 8px;">
+          <div style="display: flex; justify-content: space-between; font-size: 12px;">
+            <strong style="color: #ef4444;">Report #104: Suspected X-Ray Mining</strong>
+            <span style="color: var(--text-dim);">4m ago</span>
+          </div>
+          <p style="font-size: 12px; color: #cbd5e1; margin: 4px 0;">Reporter: <strong>StevePro</strong> &bull; Accused: <strong>Griefer99</strong></p>
+          <div style="display: flex; gap: 6px; margin-top: 6px;">
+            <button class="btn-action-sm danger" onclick="showToast('Player banned for X-Ray mining', 'error'); closeModal('notificationsModal')">Ban Player</button>
+            <button class="btn-action-sm" onclick="showToast('Report dismissed as insufficient proof', 'info'); closeModal('notificationsModal')">Dismiss</button>
+          </div>
+        </div>
+
+        <div style="padding: 12px; background: rgba(245, 158, 11, 0.08); border: 1px solid rgba(245, 158, 11, 0.25); border-radius: 8px;">
+          <div style="display: flex; justify-content: space-between; font-size: 12px;">
+            <strong style="color: #f59e0b;">Report #103: Chat Toxicity / Spam</strong>
+            <span style="color: var(--text-dim);">12m ago</span>
+          </div>
+          <p style="font-size: 12px; color: #cbd5e1; margin: 4px 0;">Reporter: <strong>FoxGamer</strong> &bull; Accused: <strong>BadSpammer</strong></p>
+          <div style="display: flex; gap: 6px; margin-top: 6px;">
+            <button class="btn-action-sm" onclick="showToast('Player muted for 1 hour', 'warning'); closeModal('notificationsModal')">Mute 1h</button>
+            <button class="btn-action-sm" onclick="showToast('Report dismissed', 'info'); closeModal('notificationsModal')">Dismiss</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeModal('notificationsModal')">Close</button>
+    </div>
+  </div>
+</div>
 
 <!-- Modal 1: Player Action & Control Center -->
 <div id="playerActionModal" class="modal-backdrop">
@@ -523,7 +1352,7 @@
 
       <!-- Section: Game Mode Switcher -->
       <div class="form-group">
-        <label class="form-label">🎮 Change Player Game Mode</label>
+        <label class="form-label">🎮 Change Player Game Mode (PRD Section 4.1)</label>
         <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px;">
           <button class="btn-secondary" onclick="executeChangeGameMode('Survival')">Survival</button>
           <button class="btn-secondary" onclick="executeChangeGameMode('Creative')">Creative</button>
@@ -532,14 +1361,15 @@
         </div>
       </div>
 
-      <!-- Section: Instant Actions (Kill, Heal, Feed, Freeze) -->
+      <!-- Section: Direct Player Operations (Kill, Heal, Feed, Freeze, Inventory) -->
       <div class="form-group">
-        <label class="form-label">⚡ Direct Player Operations</label>
+        <label class="form-label">⚡ Direct Player Operations (PRD Section 5)</label>
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
           <button class="btn-danger perm-kill" onclick="executeInstantKill()">☠️ Instant Kill (/kill)</button>
-          <button class="btn-secondary" onclick="showToast('Player healed and hearts restored', 'success')">💖 Heal & Feed (/heal)</button>
-          <button class="btn-secondary" onclick="showToast('Teleported player to your coordinates', 'info')">📍 Teleport to Me</button>
-          <button class="btn-secondary" onclick="showToast('Player movement frozen', 'warning')">❄️ Freeze / Unfreeze</button>
+          <button class="btn-secondary" onclick="executeHealPlayer()">💖 Heal & Feed (/heal)</button>
+          <button class="btn-secondary" onclick="executeTeleportPlayer()">📍 Teleport to Me</button>
+          <button class="btn-secondary" onclick="executeToggleFreeze()">❄️ Freeze / Unfreeze</button>
+          <button class="btn-secondary" style="grid-column: span 2;" onclick="openPlayerInventoryFromModal()">🎒 Inspect Inventory</button>
         </div>
       </div>
 
@@ -629,12 +1459,23 @@
     </div>
     <div class="modal-body">
       <div class="form-group">
+        <label class="form-label">Target Player:</label>
+        <select id="banTargetPlayerSelect" class="form-select">
+          <option value="StevePro">StevePro</option>
+          <option value="BuilderKing">BuilderKing</option>
+          <option value="FoxGamer">FoxGamer</option>
+          <option value="Dreamer">Dreamer</option>
+          <option value="MinecraftFan">MinecraftFan</option>
+        </select>
+      </div>
+
+      <div class="form-group">
         <label class="form-label">Punishment Type:</label>
         <select class="form-select" id="banDurationSelect">
-          <option value="perm">Permanent Ban</option>
-          <option value="30d">Temporary Ban (30 Days)</option>
-          <option value="7d">Temporary Ban (7 Days)</option>
-          <option value="24h">Temporary Ban (24 Hours)</option>
+          <option value="Permanent">Permanent Ban</option>
+          <option value="30 Days">Temporary Ban (30 Days)</option>
+          <option value="7 Days">Temporary Ban (7 Days)</option>
+          <option value="24 Hours">Temporary Ban (24 Hours)</option>
         </select>
       </div>
 

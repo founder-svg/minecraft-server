@@ -1,0 +1,48 @@
+/**
+ * Wixfox Game Control Centre - Standalone Web Server
+ * Zero-dependency native HTTP server serving the Game Control Centre
+ */
+const http = require('http');
+const fs = require('fs');
+const path = require('path');
+
+const PORT = process.env.PORT || 8085;
+const PUBLIC_DIR = __dirname;
+
+const MIME_TYPES = {
+  '.html': 'text/html',
+  '.css': 'text/css',
+  '.js': 'application/javascript',
+  '.json': 'application/json',
+  '.svg': 'image/svg+xml',
+  '.png': 'image/png',
+  '.jpg': 'image/jpeg',
+  '.ico': 'image/x-icon'
+};
+
+const server = http.createServer((req, res) => {
+  let reqPath = req.url === '/' ? '/index.html' : req.url;
+  reqPath = reqPath.split('?')[0];
+  const filePath = path.join(PUBLIC_DIR, reqPath);
+
+  fs.stat(filePath, (err, stats) => {
+    if (err || !stats.isFile()) {
+      res.writeHead(404, { 'Content-Type': 'text/plain' });
+      res.end('404 Not Found');
+      return;
+    }
+
+    const ext = path.extname(filePath).toLowerCase();
+    const contentType = MIME_TYPES[ext] || 'application/octet-stream';
+
+    res.writeHead(200, { 'Content-Type': contentType });
+    fs.createReadStream(filePath).pipe(res);
+  });
+});
+
+server.listen(PORT, '0.0.0.0', () => {
+  console.log(`==========================================================`);
+  console.log(` Wixfox Game Control Centre is running!`);
+  console.log(` Local URL: http://localhost:${PORT}`);
+  console.log(`==========================================================`);
+});

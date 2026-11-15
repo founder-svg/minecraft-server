@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wixfox Minecraft Network — Game Control Centre</title>
+  <link rel="icon" type="image/svg+xml" href="assets/logo.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<div class="app-container">
+
+  <!-- ===============================================================
+       1. SIDEBAR NAVIGATION
+       =============================================================== -->
+  <aside class="sidebar">
+    <!-- Brand Header -->
+    <div class="brand-section">
+      <div class="brand-logo">
+        <img src="assets/logo.svg" alt="Wixfox Logo">
+      </div>
+      <div class="brand-info">
+        <h2>Wixfox</h2>
+        <span>Minecraft Network</span>
+      </div>
+    </div>
+
+    <!-- Admin Profile & Role Switcher -->
+    <div class="admin-profile-card" onclick="openModal('roleSwitcherModal')">
+      <div class="admin-avatar">
+        <img src="assets/steve.svg" alt="Admin Avatar">
+      </div>
+      <div class="admin-meta">
+        <div class="admin-name">Admin</div>
+        <div class="admin-role">
+          <span id="currentRoleLabel">Owner / Super Admin</span>
+          <span class="admin-role-chevron">▼</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Navigation Items -->
+    <nav class="sidebar-nav">
+      <a class="nav-item active" data-tab="dashboard">
+        <span class="nav-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        </span>
+        <span>Dashboard</span>
+      </a>
+
+      <a class="nav-item" data-tab="players">
+        <span class="nav-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </span>
+        <span>Player Management</span>
+      </a>
+
+      <a class="nav-item" data-tab="server">
+        <span class="nav-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect width="20" height="8" x="2" y="2" rx="2" ry="2"/><rect width="20" height="8" x="2" y="14" rx="2" ry="2"/><line x1="6" x2="6.01" y1="6" y2="6"/><line x1="6" x2="6.01" y1="18" y2="18"/></svg>
+        </span>
+        <span>Server Management</span>
+      </a>
+
+      <a class="nav-item" data-tab="economy">
+        <span class="nav-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="12" x2="12" y1="2" y2="22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        </span>
+        <span>Economy</span>
+      </a>
+
+      <a class="nav-item" data-tab="ranks">
+        <span class="nav-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m12 2 3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        </span>
+        <span>Ranks & Permissions</span>
+      </a>
+
+      <a class="nav-item" data-tab="moderation">
+        <span class="nav-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg>
+        </span>
+        <span>Moderation</span>
+      </a>
+
+      <a class="nav-item" data-tab="backups">
+        <span class="nav-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5V19A9 3 0 0 0 21 19V5"/><path d="M3 12A9 3 0 0 0 21 12"/></svg>
+        </span>
+        <span>Backups</span>
+      </a>
+
+      <a class="nav-item" data-tab="files">
+        <span class="nav-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"/></svg>
+        </span>
+        <span>File Manager</span>
+      </a>
+
+      <a class="nav-item" data-tab="analytics">
+        <span class="nav-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        </span>
+        <span>Analytics</span>
+      </a>
+
+      <a class="nav-item" data-tab="settings">
+        <span class="nav-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        </span>
+        <span>Settings</span>
+      </a>
+
+      <a class="nav-item" data-tab="audit">
+        <span class="nav-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" x2="8" y1="13" y2="13"/><line x1="16" x2="8" y1="17" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+        </span>
+        <span>Audit Logs</span>
+      </a>
+    </nav>
+
+    <!-- Sidebar Footer / Logout -->
+    <div class="sidebar-footer">
+      <button class="logout-btn" onclick="showToast('Admin logged out successfully', 'info')">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg>
+        <span>Logout</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- ===============================================================
+       2. MAIN VIEWPORT & TOPBAR
+       =============================================================== -->
+  <main class="main-wrapper">
+    <!-- Top Status Ribbon -->
+    <header class="top-header">
+      <div class="server-live-ribbon">
+        <div class="status-badge">
+          <span class="status-dot"></span>
+          <span>Server Online</span>
+        </div>
+        <span class="ribbon-sep">|</span>
+        <div class="ribbon-metric">Uptime: <strong>2h 34m</strong></div>
+        <span class="ribbon-sep">|</span>
+        <div class="ribbon-metric">TPS: <strong>20.00</strong></div>
+        <span class="ribbon-sep">|</span>
+        <div class="ribbon-metric">Players: <strong>12 / 100</strong></div>
+      </div>
+
+      <div class="top-actions">
+        <!-- Notification Bell with Count Badge -->
+        <button class="icon-btn" onclick="showToast('3 active player reports waiting review', 'warning')">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+          <span class="badge-count">3</span>
+        </button>
+
+        <!-- Fullscreen Toggle -->
+        <button class="icon-btn" onclick="document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen()">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Scrollable Content Body -->
+    <div class="content-body">
+
+      <!-- =============================================================
+           VIEW 1: DASHBOARD OVERVIEW (Matching Reference Image)
+           ============================================================= -->
+      <section id="view-dashboard" class="view-pane" style="display: flex; flex-direction: column; gap: 20px;">
+        
+        <!-- Hero Banner + Quick Actions Grid -->
+        <div class="hero-action-grid">
+          <!-- Hero Banner -->
+          <div class="hero-banner">
+            <div class="banner-overlay"></div>
+            <div class="banner-content">
+              <h1 class="banner-title">Wixfox Minecraft Network</h1>
+              <p class="banner-subtitle">Play • Build • Explore • Together</p>
+            </div>
+          </div>
+
+          <!-- Quick Action Buttons -->
+          <div class="quick-actions-panel">
+            <button class="quick-action-btn btn-green" onclick="triggerServerRestart()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></svg>
+              <span>Restart Server</span>
+            </button>
+
+            <button class="quick-action-btn btn-blue" onclick="triggerBackupNow()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5V19A9 3 0 0 0 21 19V5"/><path d="M3 12A9 3 0 0 0 21 12"/></svg>
+              <span>Backup Now</span>
+            </button>
+
+            <button class="quick-action-btn btn-purple" onclick="switchTab('server')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" x2="8" y1="13" y2="13"/><line x1="16" x2="8" y1="17" y2="17"/></svg>
+              <span>View Logs</span>
+            </button>
+
+            <button class="quick-action-btn btn-orange" onclick="openModal('broadcastModal')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+              <span>Send Message</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 4 Glowing Metric Cards -->
+        <div class="stats-row">
+          <!-- Card 1: Online Players -->
+          <div class="stat-card">
+            <div class="stat-icon-box purple">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            </div>
+            <div class="stat-content">
+              <div class="stat-value-row">
+                <span class="stat-value">12</span>
+                <span class="stat-badge pos">↑ +2</span>
+              </div>
+              <div class="stat-label">Online Players</div>
+            </div>
+          </div>
+
+          <!-- Card 2: TPS -->
+          <div class="stat-card">
+            <div class="stat-icon-box green">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="16" height="16" x="4" y="4" rx="2"/><rect width="6" height="6" x="9" y="9" rx="1"/><path d="M15 2v2"/><path d="M15 20v2"/><path d="M2 15h2"/><path d="M2 9h2"/><path d="M20 15h2"/><path d="M20 9h2"/><path d="M9 2v2"/><path d="M9 20v2"/></svg>
+            </div>
+            <div class="stat-content">
+              <div class="stat-value-row">
+                <span class="stat-value">20.00</span>
+                <span class="stat-badge green-dot"></span>
+              </div>
+              <div class="stat-label">TPS</div>
+            </div>
+          </div>
+
+          <!-- Card 3: MSPT -->
+          <div class="stat-card">
+            <div class="stat-icon-box blue">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m12 14 4-4"/><path d="M3.34 19a10 10 0 1 1 17.32 0"/></svg>
+            </div>
+            <div class="stat-content">
+              <div class="stat-value-row">
+                <span class="stat-value">45ms</span>
+                <span class="stat-badge neg">↓ -8%</span>
+              </div>
+              <div class="stat-label">MSPT</div>
+            </div>
+          </div>
+
+          <!-- Card 4: Database Health -->
+          <div class="stat-card">
+            <div class="stat-icon-box orange">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5V19A9 3 0 0 0 21 19V5"/><path d="M3 12A9 3 0 0 0 21 12"/></svg>
+            </div>
+            <div class="stat-content">
+              <div class="stat-value-row">
+                <span class="stat-value">98%</span>
+              </div>
+              <div class="stat-label">Database Health</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Middle Grid: Player Overview, Server Status Waveform, Recent Activity -->
+        <div class="middle-grid">
+          <!-- Player Overview -->
+          <div class="card-panel">
+            <div class="card-panel-header">
+              <h3 class="card-panel-title">Player Overview</h3>
+              <a class="view-all-link" onclick="switchTab('players')">View All →</a>
+            </div>
+            <div class="player-list" id="playerOverviewList">
+              <!-- Populated by JS -->
+            </div>
+          </div>
+
+          <!-- Server Status & Live Waveform Graph -->
+          <div class="card-panel">
+            <div class="card-panel-header">
+              <h3 class="card-panel-title">Server Status</h3>
+              <span class="server-status-pill">Running</span>
+            </div>
+            <!-- Live Canvas Waveform -->
+            <div class="chart-container">
+              <canvas id="waveformCanvas" class="chart-canvas"></canvas>
+            </div>
+            <!-- Progress Bars for CPU, RAM, Disk -->
+            <div class="progress-metrics">
+              <div class="progress-row">
+                <div class="progress-label-wrap">
+                  <span>CPU Usage</span>
+                  <strong>32%</strong>
+                </div>
+                <div class="progress-bar-track">
+                  <div class="progress-bar-fill fill-green" style="width: 32%;"></div>
+                </div>
+              </div>
+
+              <div class="progress-row">
+                <div class="progress-label-wrap">
+                  <span>Memory Usage</span>
+                  <strong>64%</strong>
+                </div>
+                <div class="progress-bar-track">
+                  <div class="progress-bar-fill fill-purple" style="width: 64%;"></div>
+                </div>
+              </div>
+
+              <div class="progress-row">
+                <div class="progress-label-wrap">
+                  <span>Disk Usage</span>
+                  <strong>42%</strong>
+                </div>
+                <div class="progress-bar-track">
+                  <div class="progress-bar-fill fill-blue" style="width: 42%;"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Recent Activity -->
+          <div class="card-panel">
+            <div class="card-panel-header">
+              <h3 class="card-panel-title">Recent Activity</h3>
+              <a class="view-all-link" onclick="switchTab('audit')">View All →</a>
+            </div>
+            <div class="activity-list" id="recentActivityList">
+              <!-- Populated by JS -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Bottom Grid: Game Modes, Quick Stats, System Info -->
+        <div class="bottom-grid">
+          <!-- Game Modes -->
+          <div class="card-panel">
+            <div class="card-panel-header">
+              <h3 class="card-panel-title">Game Modes</h3>
+              <button class="btn-secondary" style="padding: 4px 10px; font-size: 11px;" onclick="openModal('hardcoreModal')">⚙️ Hardcore Config</button>
+            </div>
+            <div class="game-modes-wrap">
+              <div class="mode-card" onclick="openModal('gameModeManagerModal')">
+                <div class="mode-thumb smp"></div>
+                <div class="mode-details">
+                  <div class="mode-name">Survival SMP</div>
+                  <div class="mode-count">12 Players</div>
+                </div>
+              </div>
+
+              <div class="mode-card" onclick="openModal('gameModeManagerModal')">
+                <div class="mode-thumb lobby"></div>
+                <div class="mode-details">
+                  <div class="mode-name">Lobby</div>
+                  <div class="mode-count">0 Players</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Stats Trio -->
+          <div class="card-panel">
+            <div class="card-panel-header">
+              <h3 class="card-panel-title">Quick Stats</h3>
+              <span id="hardcoreStatusPill" class="stat-badge neg">Normal Survival</span>
+            </div>
+            <div class="quick-stats-trio">
+              <div class="quick-stat-block">
+                <div class="stat-round-icon">🏆</div>
+                <div class="quick-stat-info">
+                  <span>Total Players</span>
+                  <strong>1.2K</strong>
+                </div>
+              </div>
+
+              <div class="quick-stat-block">
+                <div class="stat-round-icon">⏱️</div>
+                <div class="quick-stat-info">
+                  <span>Total Playtime</span>
+                  <strong>48h 12m</strong>
+                </div>
+              </div>
+
+              <div class="quick-stat-block">
+                <div class="stat-round-icon">⭐</div>
+                <div class="quick-stat-info">
+                  <span>Top Player</span>
+                  <strong>StevePro</strong>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- System Info -->
+          <div class="card-panel">
+            <div class="card-panel-header">
+              <h3 class="card-panel-title">System Info</h3>
+            </div>
+            <div class="system-badges">
+              <div class="system-badge-item">
+                <div class="sys-icon docker">🐳</div>
+                <span class="sys-title">Docker</span>
+                <span class="sys-status green">Running</span>
+              </div>
+
+              <div class="system-badge-item">
+                <div class="sys-icon postgres">🗄️</div>
+                <span class="sys-title">PostgreSQL</span>
+                <span class="sys-status green">Running</span>
+              </div>
+
+              <div class="system-badge-item">
+                <div class="sys-icon security">🛡️</div>
+                <span class="sys-title">Security</span>
+                <span class="sys-status green">Protected</span>
+              </div>
+            </div>
+            <div class="operational-pill">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              <span>All Systems Operational</span>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- =============================================================
+           VIEW 2: SERVER CONSOLE & RCON TERMINAL
+           ============================================================= -->
+      <section id="view-server" class="view-pane" style="display: none; flex-direction: column; gap: 16px;">
+        <div class="card-panel">
+          <div class="card-panel-header">
+            <h3 class="card-panel-title">RCON Interactive Server Command Console</h3>
+            <span class="server-status-pill">Paper 1.20.4 Connected</span>
+          </div>
+          <div id="terminalLogOutput" style="background: #030712; border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 14px; font-family: var(--font-mono); font-size: 12px; height: 380px; overflow-y: auto; display: flex; flex-direction: column; gap: 4px; color: #94a3b8;">
+            <div>[00:10:01 INFO]: [NetworkCore] PostgreSQL HikariPool healthy with 5 active connections.</div>
+            <div>[00:11:42 INFO]: [Geyser-Spigot] Player BuilderKing (Bedrock) joined the server.</div>
+            <div>[00:12:05 INFO]: [EconomyCore] Processed transfer of $250.00 Coins from StevePro to BuilderKing.</div>
+            <div>[00:14:19 INFO]: [Paper] Server TPS: 20.00, MSPT: 45ms. Entity count: 184.</div>
+          </div>
+
+          <form id="rconForm" style="display: flex; gap: 10px; margin-top: 14px;">
+            <input type="text" id="rconCommandInput" class="form-input" style="flex: 1; font-family: var(--font-mono);" placeholder="Type a Minecraft server command (e.g. tps, gamemode survival StevePro, kill, say Hello)...">
+            <button type="submit" class="btn-primary">Execute Command</button>
+          </form>
+        </div>
+      </section>
+
+      <!-- =============================================================
+           VIEW 3: AUDIT LOGS TABLE
+           ============================================================= -->
+      <section id="view-audit" class="view-pane" style="display: none; flex-direction: column; gap: 16px;">
+        <div class="card-panel">
+          <div class="card-panel-header">
+            <h3 class="card-panel-title">Administrative Audit Trail (Immutable Log)</h3>
+            <button class="btn-secondary" onclick="showToast('Audit logs exported to CSV', 'success')">Export CSV</button>
+          </div>
+          <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 12.5px;">
+            <thead style="border-bottom: 1px solid var(--border-color); color: var(--text-muted);">
+              <tr>
+                <th style="padding: 10px;">Timestamp</th>
+                <th style="padding: 10px;">Staff Actor</th>
+                <th style="padding: 10px;">Role</th>
+                <th style="padding: 10px;">Action</th>
+                <th style="padding: 10px;">Target</th>
+                <th style="padding: 10px;">Execution Result</th>
+              </tr>
+            </thead>
+            <tbody id="auditTableBody" style="font-family: var(--font-mono); divide-y: 1px solid var(--border-subtle);">
+              <tr>
+                <td style="padding: 12px 10px;">2026-11-16 00:35:12</td>
+                <td style="padding: 12px 10px; font-weight: bold; color: #fff;">Admin</td>
+                <td style="padding: 12px 10px; color: var(--accent-purple);">Owner</td>
+                <td style="padding: 12px 10px; color: var(--accent-blue);">SERVER_BACKUP</td>
+                <td style="padding: 12px 10px;">world, postgres</td>
+                <td style="padding: 12px 10px; color: var(--accent-green);">SUCCESS</td>
+              </tr>
+              <tr>
+                <td style="padding: 12px 10px;">2026-11-16 00:30:05</td>
+                <td style="padding: 12px 10px; font-weight: bold; color: #fff;">Admin</td>
+                <td style="padding: 12px 10px; color: var(--accent-orange);">Admin</td>
+                <td style="padding: 12px 10px; color: var(--accent-red);">BAN_PLAYER</td>
+                <td style="padding: 12px 10px;">BadPlayer</td>
+                <td style="padding: 12px 10px; color: var(--accent-red);">BANNED (Cheating)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+    </div>
+  </main>
+</div>
+
+<!-- ===============================================================
+     MODALS
+     =============================================================== -->
+
+<!-- Modal 1: Player Action & Control Center -->
+<div id="playerActionModal" class="modal-backdrop">
+  <div class="modal-sheet">
+    <div class="modal-header">
+      <h3>
+        <span class="status-dot"></span>
+        <span id="pmPlayerName">StevePro</span> &bull; Player Control Center
+      </h3>
+      <button class="modal-close-btn" onclick="closeModal('playerActionModal')">&times;</button>
+    </div>
+    <div class="modal-body">
+      <!-- Player Profile Summary -->
+      <div style="background: rgba(255,255,255,0.02); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 14px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 12px;">
+        <div>Platform: <strong id="pmPlayerPlatform" style="color: var(--accent-green);">JAVA</strong></div>
+        <div>Current Game Mode: <strong id="pmPlayerGameMode" style="color: var(--accent-purple);">Survival</strong></div>
+        <div>Rank: <strong id="pmPlayerRank" style="color: #fbbf24;">VIP</strong></div>
+        <div>Network IP: <strong id="pmPlayerIP" style="font-family: var(--font-mono);">192.168.*.*</strong></div>
+        <div style="grid-column: span 2;">UUID: <span id="pmPlayerUUID" style="font-family: var(--font-mono); color: var(--text-dim); font-size: 10.5px;"></span></div>
+      </div>
+
+      <!-- Section: Game Mode Switcher -->
+      <div class="form-group">
+        <label class="form-label">🎮 Change Player Game Mode</label>
+        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px;">
+          <button class="btn-secondary" onclick="executeChangeGameMode('Survival')">Survival</button>
+          <button class="btn-secondary" onclick="executeChangeGameMode('Creative')">Creative</button>
+          <button class="btn-secondary" onclick="executeChangeGameMode('Adventure')">Adventure</button>
+          <button class="btn-secondary" onclick="executeChangeGameMode('Spectator')">Spectator</button>
+        </div>
+      </div>
+
+      <!-- Section: Instant Actions (Kill, Heal, Feed, Freeze) -->
+      <div class="form-group">
+        <label class="form-label">⚡ Direct Player Operations</label>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+          <button class="btn-danger perm-kill" onclick="executeInstantKill()">☠️ Instant Kill (/kill)</button>
+          <button class="btn-secondary" onclick="showToast('Player healed and hearts restored', 'success')">💖 Heal & Feed (/heal)</button>
+          <button class="btn-secondary" onclick="showToast('Teleported player to your coordinates', 'info')">📍 Teleport to Me</button>
+          <button class="btn-secondary" onclick="showToast('Player movement frozen', 'warning')">❄️ Freeze / Unfreeze</button>
+        </div>
+      </div>
+
+      <!-- Section: Moderation Actions -->
+      <div class="form-group">
+        <label class="form-label">🛡️ Moderation Punishments</label>
+        <div style="display: flex; gap: 10px;">
+          <button class="btn-secondary" style="flex: 1;" onclick="openModal('kickModal')">Kick Player</button>
+          <button class="btn-danger" style="flex: 1;" onclick="openModal('banModal')">Ban / IP-Ban</button>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeModal('playerActionModal')">Done</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal 2: Hardcore World Configuration (PRD Section 4.2) -->
+<div id="hardcoreModal" class="modal-backdrop">
+  <div class="modal-sheet">
+    <div class="modal-header">
+      <h3 style="color: var(--accent-red);">⚠️ Hardcore Gameplay Configuration</h3>
+      <button class="modal-close-btn" onclick="closeModal('hardcoreModal')">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div style="background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: var(--radius-sm); padding: 12px; color: #fca5a5; font-size: 13px; line-height: 1.4;">
+        <strong>IMPORTANT SAFEGUARD:</strong> Hardcore is a server-wide world rule. Enabling Hardcore permanently sets death to spectator mode and cannot be reversed silently. A full world snapshot backup is required before activation.
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Target World:</label>
+        <select class="form-select">
+          <option value="world">world (Survival SMP)</option>
+          <option value="hardcore_smp">Create New Hardcore World</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Death Rule Action:</label>
+        <select class="form-select">
+          <option value="spectator">Permanent Spectator Mode upon death</option>
+          <option value="tempban">24-Hour Death Ban</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; cursor: pointer;">
+          <input type="checkbox" id="backupBeforeHardcore" checked>
+          <span>Create automated world backup archive prior to applying changes</span>
+        </label>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeModal('hardcoreModal')">Cancel</button>
+      <button class="btn-danger" onclick="executeHardcoreToggle()">Confirm & Apply Hardcore Mode</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal 3: Kick Confirmation -->
+<div id="kickModal" class="modal-backdrop">
+  <div class="modal-sheet">
+    <div class="modal-header">
+      <h3>👢 Kick Player From Server</h3>
+      <button class="modal-close-btn" onclick="closeModal('kickModal')">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">Kick Reason:</label>
+        <input type="text" id="kickReasonInput" class="form-input" placeholder="e.g. Inappropriate chat language, AFK in queue">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeModal('kickModal')">Cancel</button>
+      <button class="btn-danger" onclick="executeKick()">Execute Kick</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal 4: Ban / IP Ban Configuration (PRD Section 5.3 & 5.4) -->
+<div id="banModal" class="modal-backdrop">
+  <div class="modal-sheet">
+    <div class="modal-header">
+      <h3 style="color: var(--accent-red);">🔨 Issue Punishment Ban</h3>
+      <button class="modal-close-btn" onclick="closeModal('banModal')">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">Punishment Type:</label>
+        <select class="form-select" id="banDurationSelect">
+          <option value="perm">Permanent Ban</option>
+          <option value="30d">Temporary Ban (30 Days)</option>
+          <option value="7d">Temporary Ban (7 Days)</option>
+          <option value="24h">Temporary Ban (24 Hours)</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Ban Reason:</label>
+        <input type="text" id="banReasonInput" class="form-input" placeholder="e.g. Unfair game modifications, X-Ray, Griefing">
+      </div>
+
+      <div class="form-group">
+        <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; cursor: pointer; color: var(--accent-red);">
+          <input type="checkbox" id="banIPCheckbox">
+          <span>Apply IP-Ban to prevent alternative account connections</span>
+        </label>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeModal('banModal')">Cancel</button>
+      <button class="btn-danger" onclick="executeBan()">Confirm Punishment</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal 5: Staff Role Switcher (RBAC) -->
+<div id="roleSwitcherModal" class="modal-backdrop">
+  <div class="modal-sheet">
+    <div class="modal-header">
+      <h3>Staff Access Control (RBAC Preview)</h3>
+      <button class="modal-close-btn" onclick="closeModal('roleSwitcherModal')">&times;</button>
+    </div>
+    <div class="modal-body">
+      <p style="font-size: 13px; color: var(--text-muted);">Switch active staff role to test role-based UI permissions (PRD Section 3):</p>
+      <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 10px;">
+        <button class="btn-secondary" style="text-align: left; padding: 12px;" onclick="handleRoleChange('Owner / Super Admin'); closeModal('roleSwitcherModal')">
+          <strong style="color: #fff; display: block;">👑 Owner / Super Admin</strong>
+          <span style="font-size: 11px; color: var(--text-dim);">Full control over worlds, plugins, console, deployments, and staff.</span>
+        </button>
+
+        <button class="btn-secondary" style="text-align: left; padding: 12px;" onclick="handleRoleChange('Admin'); closeModal('roleSwitcherModal')">
+          <strong style="color: #fff; display: block;">🛡️ Admin</strong>
+          <span style="font-size: 11px; color: var(--text-dim);">Manage players, instant kill, bans, IP-bans, inventories, and approved assets.</span>
+        </button>
+
+        <button class="btn-secondary" style="text-align: left; padding: 12px;" onclick="handleRoleChange('Moderator'); closeModal('roleSwitcherModal')">
+          <strong style="color: #fff; display: block;">⚖️ Moderator</strong>
+          <span style="font-size: 11px; color: var(--text-dim);">Kick, ban, and mute players. No plugin, world upload, or kill permissions.</span>
+        </button>
+
+        <button class="btn-secondary" style="text-align: left; padding: 12px;" onclick="handleRoleChange('Developer'); closeModal('roleSwitcherModal')">
+          <strong style="color: #fff; display: block;">💻 Developer</strong>
+          <span style="font-size: 11px; color: var(--text-dim);">Access technical logs, staging files, and test game modes. No player bans.</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Toast Container -->
+<div id="toastContainer" class="toast-container"></div>
+
+<script src="js/app.js"></script>
+</body>
+</html>

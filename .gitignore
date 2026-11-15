@@ -81,3 +81,7 @@ postgres-data/
 docker-volumes/
 backups/*.sql
 backups/*.tar.gz
+
+# Cache & AI IDE metadata
+.aisha/
+

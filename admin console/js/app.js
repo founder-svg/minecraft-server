@@ -41,16 +41,12 @@ const AppState = {
     pvp: true
   },
 
-  players: [
-    { id: 'p-1', name: 'Steve', platform: 'JAVA', uuid: '069a79f4-44e9-4726-a5be-fca90e38aaf5', gameMode: 'Survival', status: 'Offline', playtime: '0m', ip: '192.168.1.10', health: 20, food: 20, rank: 'Member', world: 'world', wallet: 100, bank: 500, lastTx: 'Never' },
-    { id: 'p-2', name: 'Alex', platform: 'BEDROCK', uuid: '00000000-0000-0000-0009-01f234567890', gameMode: 'Survival', status: 'Offline', playtime: '0m', ip: '192.168.1.20', health: 20, food: 20, rank: 'Member', world: 'world', wallet: 100, bank: 500, lastTx: 'Never' }
-  ],
+  players: [],
 
   activities: [
-    { id: 'act-1', text: 'Wixfox Minecraft Network v1.0 initialized and ready', time: 'Just now', type: 'announcement' },
-    { id: 'act-2', text: 'All 7 defense-in-depth security layers active', time: '1m ago', type: 'backup' },
-    { id: 'act-3', text: 'GeyserMC Bedrock crossplay bridge listening on UDP 19132', time: '2m ago', type: 'join' },
-    { id: 'act-4', text: 'Paper 1.20.4 core engine listening on TCP 25565', time: '3m ago', type: 'join' }
+    { id: 'act-1', text: 'Wixfox Minecraft Network v1.0 initialized & online', time: 'Just now', type: 'announcement' },
+    { id: 'act-2', text: 'Live cloud pipeline connected: Professor002.aternos.me:64824', time: '1m ago', type: 'join' },
+    { id: 'act-3', text: 'Geyser & Floodgate crossplay active: listening for players', time: '2m ago', type: 'backup' }
   ],
 
   auditLogs: [
@@ -312,6 +308,19 @@ function renderPlayerOverview() {
   container.innerHTML = '';
   const onlinePlayers = AppState.players.filter(p => p.status === 'Online');
 
+  if (onlinePlayers.length === 0) {
+    container.innerHTML = `
+      <div style="text-align: center; padding: 28px 12px; color: var(--text-muted); font-size: 12.5px;">
+        <div style="font-size: 26px; margin-bottom: 6px;">🎮</div>
+        <strong>No players online right now.</strong><br>
+        <span style="font-size: 11px; color: var(--text-dim); display: block; margin-top: 4px;">
+          Share <code>Professor002.aternos.me:64824</code> or click <em>+ Register New Player</em> to initialize telemetry.
+        </span>
+      </div>
+    `;
+    return;
+  }
+
   onlinePlayers.forEach(p => {
     const item = document.createElement('div');
     item.className = 'player-item';
@@ -402,7 +411,11 @@ function renderFullPlayersTable() {
   });
 
   if (filtered.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="9" style="text-align: center; padding: 24px; color: var(--text-dim);">No matching players found.</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="9" style="text-align: center; padding: 32px 16px; color: var(--text-muted); font-size: 13px;">
+      <div style="font-size: 26px; margin-bottom: 6px;">👥</div>
+      <strong>No player records found.</strong><br>
+      <span style="font-size: 11px; color: var(--text-dim); display: block; margin-top: 4px;">Click <strong>+ Register New Player</strong> or share <code>Professor002.aternos.me:64824</code> with your players to start recording telemetry.</span>
+    </td></tr>`;
     return;
   }
 
@@ -473,6 +486,16 @@ function renderEconomyTable() {
   if (!tbody) return;
 
   tbody.innerHTML = '';
+
+  if (AppState.players.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding: 32px 16px; color: var(--text-muted); font-size: 13px;">
+      <div style="font-size: 26px; margin-bottom: 6px;">💰</div>
+      <strong>No player accounts in economy ledger.</strong><br>
+      <span style="font-size: 11px; color: var(--text-dim); display: block; margin-top: 4px;">Register a player to allocate starting balances and track ACID transactions.</span>
+    </td></tr>`;
+    return;
+  }
+
   AppState.players.forEach(p => {
     const total = p.wallet + p.bank;
     const tr = document.createElement('tr');
@@ -1514,6 +1537,163 @@ function saveServerConnectionSettings() {
   closeModal('serverConnectionModal');
 }
 
+// ===================================================================
+// 15C. DYNAMIC DASHBOARD STATS & REGISTRATION
+// ===================================================================
+function updateDashboardStats() {
+  const totalCount = AppState.players.length;
+  const onlineCount = AppState.players.filter(p => p.status === 'Online').length;
+  const javaCount = AppState.players.filter(p => p.platform === 'JAVA').length;
+  const bedrockCount = AppState.players.filter(p => p.platform === 'BEDROCK').length;
+  const bannedCount = AppState.players.filter(p => p.status === 'Banned').length;
+
+  AppState.server.playersOnline = onlineCount;
+
+  // Header and stat cards
+  const topPlayers = document.getElementById('topPlayersText');
+  if (topPlayers) topPlayers.textContent = `${onlineCount} / ${AppState.server.playersMax}`;
+
+  const dashPlayersVal = document.getElementById('dashPlayersVal');
+  if (dashPlayersVal) dashPlayersVal.textContent = `${onlineCount}`;
+
+  const smpModeCount = document.getElementById('smpModeCount');
+  if (smpModeCount) smpModeCount.textContent = `${onlineCount} Players Active`;
+
+  const statTotalPlayers = document.getElementById('statTotalPlayers');
+  if (statTotalPlayers) statTotalPlayers.textContent = `${totalCount}`;
+
+  // Top player
+  const statTopPlayerName = document.getElementById('statTopPlayerName');
+  if (statTopPlayerName) {
+    if (totalCount > 0) {
+      statTopPlayerName.textContent = AppState.players[0].name;
+    } else {
+      statTopPlayerName.textContent = 'None (Awaiting First Join)';
+    }
+  }
+
+  // Economy stats
+  const totalCirculation = AppState.players.reduce((sum, p) => sum + (p.wallet + p.bank), 0);
+  const richest = [...AppState.players].sort((a, b) => (b.wallet + b.bank) - (a.wallet + a.bank))[0];
+
+  const statEconCirculation = document.getElementById('statEconCirculation');
+  if (statEconCirculation) statEconCirculation.textContent = `$${totalCirculation.toLocaleString()}`;
+
+  const statEconRichest = document.getElementById('statEconRichest');
+  if (statEconRichest) statEconRichest.textContent = richest ? richest.name : 'None';
+
+  const statEconRichestAmt = document.getElementById('statEconRichestAmt');
+  if (statEconRichestAmt) statEconRichestAmt.textContent = richest ? `Richest Player ($${(richest.wallet + richest.bank).toLocaleString()})` : 'Richest Player ($0)';
+
+  // Filter pills
+  const pAll = document.getElementById('pillFilterAll');
+  if (pAll) pAll.textContent = `All (${totalCount})`;
+
+  const pOnline = document.getElementById('pillFilterOnline');
+  if (pOnline) pOnline.textContent = `Online (${onlineCount})`;
+
+  const pJava = document.getElementById('pillFilterJava');
+  if (pJava) pJava.textContent = `Java (${javaCount})`;
+
+  const pBedrock = document.getElementById('pillFilterBedrock');
+  if (pBedrock) pBedrock.textContent = `Bedrock (${bedrockCount})`;
+
+  const pBanned = document.getElementById('pillFilterBanned');
+  if (pBanned) pBanned.textContent = `Banned (${bannedCount})`;
+
+  populatePlayerDropdowns();
+}
+
+function populatePlayerDropdowns() {
+  const selects = ['giveCoinsPlayerSelect', 'rankAssignPlayerSelect', 'banPlayerSelect'];
+  selects.forEach(id => {
+    const sel = document.getElementById(id);
+    if (!sel) return;
+    sel.innerHTML = '';
+    if (AppState.players.length === 0) {
+      const opt = document.createElement('option');
+      opt.value = '';
+      opt.textContent = 'No players registered yet';
+      opt.disabled = true;
+      opt.selected = true;
+      sel.appendChild(opt);
+    } else {
+      AppState.players.forEach(p => {
+        const opt = document.createElement('option');
+        opt.value = p.name;
+        opt.textContent = `${p.name} (${p.platform} - ${p.rank})`;
+        sel.appendChild(opt);
+      });
+    }
+  });
+}
+
+function openRegisterPlayerModal() {
+  const input = document.getElementById('regPlayerName');
+  if (input) input.value = '';
+  openModal('registerPlayerModal');
+}
+
+function executeRegisterNewPlayer() {
+  const nameInput = document.getElementById('regPlayerName');
+  const platform = document.getElementById('regPlayerPlatform')?.value || 'JAVA';
+  const gameMode = document.getElementById('regPlayerMode')?.value || 'Survival';
+  const rank = document.getElementById('regPlayerRank')?.value || 'Member';
+  const wallet = parseInt(document.getElementById('regPlayerWallet')?.value) || 100;
+
+  const name = (nameInput ? nameInput.value : '').trim();
+  if (!name) {
+    showToast('Please enter a valid Minecraft username or gamertag.', 'warning');
+    return;
+  }
+
+  // Check duplicate
+  if (AppState.players.some(p => p.name.toLowerCase() === name.toLowerCase())) {
+    showToast(`Player "${name}" is already registered.`, 'warning');
+    return;
+  }
+
+  const newPlayer = {
+    id: 'p-' + Date.now(),
+    name: name,
+    platform: platform,
+    uuid: 'uuid-' + Math.random().toString(36).substring(2, 10) + '-' + Date.now().toString(36),
+    gameMode: gameMode,
+    status: 'Online',
+    playtime: '0m',
+    ip: '127.0.0.1',
+    health: 20,
+    food: 20,
+    rank: rank,
+    world: 'world',
+    wallet: wallet,
+    bank: 500,
+    lastTx: 'Just now'
+  };
+
+  AppState.players.unshift(newPlayer);
+  localStorage.setItem('wixfox_players', JSON.stringify(AppState.players));
+
+  // Add activity log
+  AppState.activities.unshift({
+    id: 'act-' + Date.now(),
+    text: `Player ${name} (${platform}) registered into database & whitelist`,
+    time: 'Just now',
+    type: 'join'
+  });
+
+  recordAudit('PLAYER_REGISTER', `${name} [${platform} / ${rank}]`, 'SUCCESS');
+  showToast(`Successfully registered ${name} to Wixfox Network!`, 'success');
+
+  closeModal('registerPlayerModal');
+  updateDashboardStats();
+  renderPlayerOverview();
+  renderRecentActivity();
+  renderFullPlayersTable();
+  renderEconomyTable();
+  renderModerationView();
+}
+
 function resetConsoleToPristine() {
   const confirmed = confirm(
     "FACTORY RESET / CLIENT DELIVERY MODE\n\n" +
@@ -1521,18 +1701,22 @@ function resetConsoleToPristine() {
     "This will:\n" +
     "- Reset active player count to 0 / 100\n" +
     "- Clear moderation bans, mutes, reports, and IP-bans\n" +
+    "- Clear player lists for fresh player onboarding\n" +
+    "- Reset economy circulation and transactions to $0\n" +
     "- Clean audit trail and recent activity to initial system boot state\n" +
     "- Reset CPU, RAM, Disk, and TPS metrics to pristine baseline\n" +
-    "- Prepare the console cleanly for client handover."
+    "- Save clean state so new players can start fresh."
   );
 
   if (!confirmed) return;
 
   // Clear local storage
+  localStorage.removeItem('wixfox_players');
   localStorage.removeItem('wixfox_connection_cfg');
   localStorage.removeItem('wixfox_sec_checklist');
 
   // Reset AppState
+  AppState.players = [];
   AppState.server.playersOnline = 0;
   AppState.server.uptimeSeconds = 300;
   AppState.server.tps = 20.00;
@@ -1546,48 +1730,17 @@ function resetConsoleToPristine() {
   AppState.ipbans = [];
   AppState.reports = [];
 
-  AppState.players = [
-    { id: 'p-1', name: 'Steve', platform: 'JAVA', uuid: '069a79f4-44e9-4726-a5be-fca90e38aaf5', gameMode: 'Survival', status: 'Offline', playtime: '0m', ip: '192.168.1.10', health: 20, food: 20, rank: 'Member', world: 'world', wallet: 100, bank: 500, lastTx: 'Never' },
-    { id: 'p-2', name: 'Alex', platform: 'BEDROCK', uuid: '00000000-0000-0000-0009-01f234567890', gameMode: 'Survival', status: 'Offline', playtime: '0m', ip: '192.168.1.20', health: 20, food: 20, rank: 'Member', world: 'world', wallet: 100, bank: 500, lastTx: 'Never' }
-  ];
-
   AppState.activities = [
-    { id: 'act-1', text: 'Wixfox Minecraft Network v1.0 initialized and ready', time: 'Just now', type: 'announcement' },
-    { id: 'act-2', text: 'All 7 defense-in-depth security layers active', time: '1m ago', type: 'backup' },
-    { id: 'act-3', text: 'GeyserMC Bedrock crossplay bridge listening on UDP 19132', time: '2m ago', type: 'join' },
-    { id: 'act-4', text: 'Paper 1.20.4 core engine listening on TCP 25565', time: '3m ago', type: 'join' }
+    { id: 'act-1', text: 'Wixfox Minecraft Network v1.0 initialized & online', time: 'Just now', type: 'announcement' },
+    { id: 'act-2', text: 'Live cloud pipeline connected: Professor002.aternos.me:64824', time: '1m ago', type: 'join' }
   ];
 
   AppState.auditLogs = [
     { timestamp: new Date().toISOString().replace('T', ' ').substring(0, 19), actor: 'System', role: 'Owner / Super Admin', action: 'SYSTEM_BOOTSTRAP', target: 'Wixfox Network v1.0', result: 'OPERATIONAL' },
-    { timestamp: new Date().toISOString().replace('T', ' ').substring(0, 19), actor: 'System', role: 'Owner / Super Admin', action: 'FACTORY_RESET', target: 'Pristine Client Delivery', result: 'COMPLETED' }
+    { timestamp: new Date().toISOString().replace('T', ' ').substring(0, 19), actor: 'System', role: 'Owner / Super Admin', action: 'FACTORY_RESET', target: 'Pristine Live Production', result: 'COMPLETED' }
   ];
 
-  // Re-render UI
-  const onlinePlayersCount = document.getElementById('statOnlinePlayersCount');
-  if (onlinePlayersCount) onlinePlayersCount.textContent = '0';
-
-  const topPlayers = document.getElementById('topServerPlayers');
-  if (topPlayers) topPlayers.textContent = '0 / 100';
-
-  const tpsStat = document.getElementById('statTpsValue');
-  if (tpsStat) tpsStat.textContent = '20.00';
-
-  const msptStat = document.getElementById('statMsptValue');
-  if (msptStat) msptStat.textContent = '18ms';
-
-  const dbHealth = document.getElementById('statDbHealth');
-  if (dbHealth) dbHealth.textContent = '100%';
-
-  const cpuStat = document.getElementById('statCpuPercent');
-  if (cpuStat) cpuStat.textContent = '8%';
-
-  const ramStat = document.getElementById('statRamPercent');
-  if (ramStat) ramStat.textContent = '22%';
-
-  const diskStat = document.getElementById('statDiskPercent');
-  if (diskStat) diskStat.textContent = '12%';
-
+  updateDashboardStats();
   renderPlayerOverview();
   renderRecentActivity();
   renderFullPlayersTable();
@@ -1596,7 +1749,7 @@ function resetConsoleToPristine() {
   renderModerationView();
   renderAuditLogs();
 
-  recordAudit('CONSOLE_RESET', 'Client Handover Delivery', 'SUCCESS');
+  recordAudit('CONSOLE_RESET', 'Factory Reset for Clean Deployment', 'SUCCESS');
   showToast('Admin Console reset to Factory Pristine State for client delivery!', 'success');
 }
 
@@ -1604,7 +1757,20 @@ function resetConsoleToPristine() {
 // 16. INITIALIZATION ON DOM READY
 // ===================================================================
 window.addEventListener('DOMContentLoaded', () => {
+  // Load saved players from localStorage if present
+  const savedPlayers = localStorage.getItem('wixfox_players');
+  if (savedPlayers) {
+    try {
+      AppState.players = JSON.parse(savedPlayers);
+    } catch (e) {
+      AppState.players = [];
+    }
+  } else {
+    AppState.players = [];
+  }
+
   initWaveformChart();
+  updateDashboardStats();
   renderPlayerOverview();
   renderRecentActivity();
   updateUIForRole();

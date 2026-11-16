@@ -233,8 +233,8 @@
             </div>
             <div class="stat-content">
               <div class="stat-value-row">
-                <span class="stat-value" id="dashPlayersVal">12</span>
-                <span class="stat-badge pos">↑ +2</span>
+                <span class="stat-value" id="dashPlayersVal">0</span>
+                <span class="stat-badge neutral">0 Active</span>
               </div>
               <div class="stat-label">Online Players</div>
             </div>
@@ -247,10 +247,10 @@
             </div>
             <div class="stat-content">
               <div class="stat-value-row">
-                <span class="stat-value">20.00</span>
+                <span class="stat-value" id="statTpsValue">20.00</span>
                 <span class="stat-badge green-dot"></span>
               </div>
-              <div class="stat-label">TPS</div>
+              <div class="stat-label">TPS (Optimal)</div>
             </div>
           </div>
 
@@ -261,8 +261,8 @@
             </div>
             <div class="stat-content">
               <div class="stat-value-row">
-                <span class="stat-value">45ms</span>
-                <span class="stat-badge neg">↓ -8%</span>
+                <span class="stat-value" id="statMsptValue">18ms</span>
+                <span class="stat-badge pos">Optimal</span>
               </div>
               <div class="stat-label">MSPT</div>
             </div>
@@ -275,7 +275,7 @@
             </div>
             <div class="stat-content">
               <div class="stat-value-row">
-                <span class="stat-value">98%</span>
+                <span class="stat-value" id="statDbHealth">100%</span>
               </div>
               <div class="stat-label">Database Health</div>
             </div>
@@ -364,7 +364,7 @@
                 <div class="mode-thumb smp"></div>
                 <div class="mode-details">
                   <div class="mode-name">Survival SMP</div>
-                  <div class="mode-count">12 Players Active</div>
+                  <div class="mode-count" id="smpModeCount">0 Players Active</div>
                 </div>
               </div>
 
@@ -372,7 +372,7 @@
                 <div class="mode-thumb lobby"></div>
                 <div class="mode-details">
                   <div class="mode-name">Lobby Hub</div>
-                  <div class="mode-count">0 Players</div>
+                  <div class="mode-count" id="lobbyModeCount">0 Players</div>
                 </div>
               </div>
             </div>
@@ -389,7 +389,7 @@
                 <div class="stat-round-icon">🏆</div>
                 <div class="quick-stat-info">
                   <span>Total Players</span>
-                  <strong>1.2K</strong>
+                  <strong id="statTotalPlayers">0</strong>
                 </div>
               </div>
 
@@ -397,7 +397,7 @@
                 <div class="stat-round-icon">⏱️</div>
                 <div class="quick-stat-info">
                   <span>Total Playtime</span>
-                  <strong>48h 12m</strong>
+                  <strong id="statTotalPlaytime">0h 00m</strong>
                 </div>
               </div>
 
@@ -405,7 +405,7 @@
                 <div class="stat-round-icon">⭐</div>
                 <div class="quick-stat-info">
                   <span>Top Player</span>
-                  <strong>StevePro</strong>
+                  <strong id="statTopPlayerName">None (Awaiting First Join)</strong>
                 </div>
               </div>
             </div>
@@ -455,7 +455,7 @@
               <p style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">Search, teleport, moderate, adjust game mode, or inspect player inventories in real time.</p>
             </div>
             <div style="display: flex; gap: 10px;">
-              <button class="btn-primary" onclick="showToast('Opened Whitelist management', 'info')">+ Add Whitelist</button>
+              <button class="btn-primary" onclick="openRegisterPlayerModal()">+ Register New Player</button>
             </div>
           </div>
 
@@ -466,11 +466,11 @@
               <input type="text" id="playerSearchInput" class="form-input" placeholder="Search by username, UUID, or rank..." oninput="filterPlayersTable()">
             </div>
             <div class="filter-pills">
-              <button class="filter-pill active" onclick="setPlayerFilter('all', this)">All (6)</button>
-              <button class="filter-pill" onclick="setPlayerFilter('online', this)">Online (5)</button>
-              <button class="filter-pill" onclick="setPlayerFilter('java', this)">Java (4)</button>
-              <button class="filter-pill" onclick="setPlayerFilter('bedrock', this)">Bedrock (2)</button>
-              <button class="filter-pill" onclick="setPlayerFilter('banned', this)">Banned (1)</button>
+              <button class="filter-pill active" onclick="setPlayerFilter('all', this)" id="pillFilterAll">All (0)</button>
+              <button class="filter-pill" onclick="setPlayerFilter('online', this)" id="pillFilterOnline">Online (0)</button>
+              <button class="filter-pill" onclick="setPlayerFilter('java', this)" id="pillFilterJava">Java (0)</button>
+              <button class="filter-pill" onclick="setPlayerFilter('bedrock', this)" id="pillFilterBedrock">Bedrock (0)</button>
+              <button class="filter-pill" onclick="setPlayerFilter('banned', this)" id="pillFilterBanned">Banned (0)</button>
             </div>
           </div>
 
@@ -561,7 +561,7 @@
           <div class="stat-card">
             <div class="stat-icon-box orange">💰</div>
             <div class="stat-content">
-              <div class="stat-value">$142,500</div>
+              <div class="stat-value" id="statEconCirculation">$0</div>
               <div class="stat-label">Currency in Circulation</div>
             </div>
           </div>
@@ -575,15 +575,15 @@
           <div class="stat-card">
             <div class="stat-icon-box purple">⭐</div>
             <div class="stat-content">
-              <div class="stat-value">StevePro</div>
-              <div class="stat-label">Richest Player ($45,200)</div>
+              <div class="stat-value" id="statEconRichest">None</div>
+              <div class="stat-label" id="statEconRichestAmt">Richest Player ($0)</div>
             </div>
           </div>
           <div class="stat-card">
             <div class="stat-icon-box blue">💳</div>
             <div class="stat-content">
-              <div class="stat-value">$18,420</div>
-              <div class="stat-label">24h Volume (148 Tx)</div>
+              <div class="stat-value" id="statEconVolume">$0</div>
+              <div class="stat-label">24h Volume (0 Tx)</div>
             </div>
           </div>
         </div>
@@ -1816,6 +1816,63 @@
           <span style="font-size: 11px; color: var(--text-dim);">Access technical logs, staging files, and test game modes. No player bans.</span>
         </button>
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Register / Add New Player -->
+<div id="registerPlayerModal" class="modal-backdrop">
+  <div class="modal-sheet" style="max-width: 500px;">
+    <div class="modal-header">
+      <h3 style="color: var(--wix-orange);">🎮 Register / Add New Player</h3>
+      <button class="modal-close-btn" onclick="closeModal('registerPlayerModal')">&times;</button>
+    </div>
+    <div class="modal-body">
+      <p style="font-size: 12.5px; color: var(--text-muted); margin-bottom: 14px;">
+        Register a new player profile into the Wixfox PostgreSQL database and whitelist.
+      </p>
+      <div class="form-group" style="margin-bottom: 12px;">
+        <label class="form-label">Minecraft Username / Gamertag:</label>
+        <input type="text" id="regPlayerName" class="form-input" placeholder="e.g. WixfoxGamer" required>
+      </div>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px;">
+        <div class="form-group">
+          <label class="form-label">Platform:</label>
+          <select id="regPlayerPlatform" class="form-input">
+            <option value="JAVA">Java Edition (PC)</option>
+            <option value="BEDROCK">Bedrock Edition (Mobile/Console)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Initial Game Mode:</label>
+          <select id="regPlayerMode" class="form-input">
+            <option value="Survival">Survival</option>
+            <option value="Creative">Creative</option>
+            <option value="Adventure">Adventure</option>
+            <option value="Spectator">Spectator</option>
+          </select>
+        </div>
+      </div>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px;">
+        <div class="form-group">
+          <label class="form-label">Initial Rank (LuckPerms):</label>
+          <select id="regPlayerRank" class="form-input">
+            <option value="Member">Member</option>
+            <option value="VIP">VIP</option>
+            <option value="Premium">Premium</option>
+            <option value="Moderator">Moderator</option>
+            <option value="Admin">Admin</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Starting Wallet ($):</label>
+          <input type="number" id="regPlayerWallet" class="form-input" value="100" min="0">
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeModal('registerPlayerModal')">Cancel</button>
+      <button class="btn-primary" onclick="executeRegisterNewPlayer()">Register Player</button>
     </div>
   </div>
 </div>

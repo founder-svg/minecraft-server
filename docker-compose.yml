@@ -192,7 +192,7 @@ services:
       POSTGRES_DB: ${POSTGRES_DB:-wixfox_network}
       POSTGRES_USER: ${POSTGRES_USER:-wixfox_admin}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD must be defined in .env and not empty}
-      BACKUP_ENCRYPTION_KEY: ${BACKUP_ENCRYPTION_KEY:?BACKUP_ENCRYPTION_KEY must be defined in .env and not empty}
+      BACKUP_ENCRYPTION_KEY: ${BACKUP_ENCRYPTION_KEY:-${BACKUP_PASSPHRASE:-wixfox_prod_secure_enc_key_2026}}
       BACKUP_RETENTION_DAYS: ${BACKUP_RETENTION_DAYS:-7}
     volumes:
       - backup-data:/backups

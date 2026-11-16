@@ -1,0 +1,44 @@
+{
+  "name": "Wixfox Minecraft Network (4-Core 16GB RAM)",
+  "image": "mcr.microsoft.com/devcontainers/universal:latest",
+  "hostRequirements": {
+    "cpus": 4,
+    "memory": "16gb",
+    "storage": "32gb"
+  },
+  "features": {
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {
+      "version": "latest",
+      "enableDockerService": true
+    }
+  },
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "terminal.integrated.defaultProfile.linux": "bash"
+      },
+      "extensions": [
+        "ms-azuretools.vscode-docker"
+      ]
+    }
+  },
+  "postCreateCommand": "bash scripts/setup-codespaces.sh",
+  "portsAttributes": {
+    "25565": {
+      "label": "Minecraft Java",
+      "onAutoForward": "silent"
+    },
+    "19132": {
+      "label": "Minecraft Bedrock",
+      "onAutoForward": "silent"
+    },
+    "3000": {
+      "label": "Wixfox Backend API",
+      "onAutoForward": "silent"
+    },
+    "8080": {
+      "label": "Wixfox Admin Console",
+      "onAutoForward": "openBrowser"
+    }
+  }
+}

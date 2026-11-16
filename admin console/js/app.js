@@ -16,9 +16,9 @@ const AppState = {
   playerFilter: 'all',
 
   connection: {
-    javaHost: 'play.wixfox.net:25565',
-    bedrockHost: 'play.wixfox.net',
-    bedrockPort: 19132,
+    javaHost: 'Professor002.aternos.me:64824',
+    bedrockHost: 'Professor002.aternos.me',
+    bedrockPort: 64824,
     apiEndpoint: 'http://127.0.0.1:3000/api',
     adminKey: '',
     status: 'ONLINE'
@@ -1493,9 +1493,9 @@ function testLiveServerPing() {
 }
 
 function saveServerConnectionSettings() {
-  const javaHost = document.getElementById('connJavaAddress')?.value || 'play.wixfox.net:25565';
-  const bedrockHost = document.getElementById('connBedrockAddress')?.value || 'play.wixfox.net';
-  const bedrockPort = parseInt(document.getElementById('connBedrockPort')?.value) || 19132;
+  const javaHost = document.getElementById('connJavaAddress')?.value || 'Professor002.aternos.me:64824';
+  const bedrockHost = document.getElementById('connBedrockAddress')?.value || 'Professor002.aternos.me';
+  const bedrockPort = parseInt(document.getElementById('connBedrockPort')?.value) || 64824;
   const apiEndpoint = document.getElementById('connApiEndpoint')?.value || 'http://127.0.0.1:3000/api';
   const adminKey = document.getElementById('connAdminKey')?.value || '';
 

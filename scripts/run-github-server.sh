@@ -60,9 +60,10 @@ if ! command -v playit &> /dev/null; then
   echo "✅ Playit agent installed."
 fi
 
-# 4. Launch Docker Containers (Postgres, Paper 1.20.4, Geyser, Backend API)
+# 4. Launch Docker Containers (Postgres, Paper 1.20.4, Geyser)
 echo "🚀 Booting PostgreSQL Database & Minecraft Crossplay Engine..."
-docker compose up -d --build
+docker compose up -d --build postgres minecraft
+docker compose up -d backend admin-panel backup 2>/dev/null || true
 
 echo "⏳ Waiting for Paper server and PostgreSQL to initialize..."
 sleep 5

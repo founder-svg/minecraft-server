@@ -24,8 +24,10 @@ RUN addgroup -g 1000 minecraft && \
 
 WORKDIR /data
 
-# Download pinned stable Paper 1.20.4 build
-RUN curl -fsSL -o /data/paper.jar \
+# Download pinned stable Paper 1.20.4 build (Using official Paper v3 object repository)
+RUN curl -fsSL -A "wixfox/1.0" -o /data/paper.jar \
+    "https://fill-data.papermc.io/v1/objects/cabed3ae77cf55deba7c7d8722bc9cfd5e991201c211665f9265616d9fe5c77b/paper-1.20.4-499.jar" || \
+    curl -fsSL -A "wixfox/1.0" -o /data/paper.jar \
     "https://api.papermc.io/v2/projects/paper/versions/${PAPER_VERSION}/builds/${PAPER_BUILD}/downloads/paper-${PAPER_VERSION}-${PAPER_BUILD}.jar"
 
 # Setup plugin directories
